@@ -178,6 +178,19 @@ def get_insta_like(driver):
         driver.implicitly_wait(10)
         like = driver.find_element(By.CSS_SELECTOR, 'section._ae5m > div > div > span > a > span > span').text
 
+        if '만' in like:
+            if '.' in like:
+                like = like.replace('.', '')
+                like = like.replace('만', '000')
+            else: 
+                like = like.replace('만', '0000')
+        if '억' in like:
+            if '.' in like:
+                like = like.replace('.', '')
+                like = like.replace('억', '0000000')
+            else:
+                like = like.replace('억', '00000000')
+
         return int(like)
     except Exception as e:
         print("오류 발생:", e)
@@ -226,6 +239,33 @@ def get_insta_tags(driver):
     except Exception as e:
         print("오류 발생:", e)
 
+def get_insta_comment_most_like(driver):
+    """본문 댓글 내 좋아요를 가장 많이 받은 댓글 크롤링 함수.
+    
+    Args:
+        driver(webdriver): selenium의 webdriver.
+    """
+    try:
+        driver.implicitly_wait(10)
+        like_list = driver.find_elements(By.CSS_SELECTOR, 'div._ae5q > ul > div.x9f619 > div > div > div > ul > div > li > div > div > div._a9zr > div.x9f619 > span > button:nth-child(2) > span')
+        comment_like_dict = {}
+
+        for idx in range(len(like_list)):
+            if '좋아요' in like_list[idx].text:
+                comment_like_dict[idx] = int(like_list[idx].text.replace('좋아요 ', '').replace('개', ''))
+            else:
+                comment_like_dict[idx] = 0
+
+        comment_most_like = sorted(comment_like_dict.items(), key=lambda x: x[1], reverse=True)
+        print(list(dict(comment_most_like).keys())[0])
+
+        driver.implicitly_wait(10)
+        like_list = driver.find_elements(By.CSS_SELECTOR, 'div._ae5q > ul > div.x9f619 > div > div > div > ul > div > li > div > div > div._a9zr > div.x9f619 > span > button:nth-child(2) > span')
+
+        return comment_most_like
+    except Exception as e:
+        print("오류 발생:", e)
+
 login_insta_admin(driver, administratorID, administratorPW)
 
 # 로그인 저장 나중에 하기 버튼
@@ -253,7 +293,7 @@ driver.implicitly_wait(10)
 postList = []
 
 # 원하는 게시물 수만큼 반복
-for i in range(3):
+for i in range(1):
     driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
     driver.implicitly_wait(10)
     tags, tag_length = get_insta_tags(driver) # 해시태그, 해시태그 개수를 튜플로 반환해서 언패킹.
@@ -263,14 +303,15 @@ for i in range(3):
         'content': get_insta_content(driver), 
         'tags': tags,
         'tag_length': tag_length,
+        'comment_most_like': get_insta_comment_most_like(driver),
     }
     postList.append(postDict)
 profileDict['post'] = postList
 
 # 크롤링한 데이터를 DB에 업로드.
-if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
-    serializer = ProfileSerializer(data=profileDict)
-    if serializer.is_valid():
-        serializer.save()
-    else:
-        print(serializer.errors)
+# if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
+#     serializer = ProfileSerializer(data=profileDict)
+#     if serializer.is_valid():
+#         serializer.save()
+#     else:
+#         print(serializer.errors)
