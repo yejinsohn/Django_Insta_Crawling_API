@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+import crawling_modules
 import re
 
 # 파일이 실행될 때 환경변수에 현재 자신의 프로젝트의 settings.py파일 경로를 등록.
@@ -74,171 +75,6 @@ def search_insta_account(driver, URL):
     driver.get(URL)
     driver.implicitly_wait(50)
 
-def get_insta_posts(driver):
-    """게시물 수 크롤링 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-    """
-    try:
-        driver.implicitly_wait(10)
-        posts = driver.find_element(By.CSS_SELECTOR, 'li:nth-child(1)>span').text
-        if '만' in posts:
-            if '.' in posts:
-                posts = posts.replace('.', '')
-                posts = posts.replace('만', '000')
-            else: 
-                posts = posts.replace('만', '0000')
-        if '억' in posts:
-            if '.' in posts:
-                posts = posts.replace('.', '')
-                posts = posts.replace('억', '0000000')
-            else:
-                posts = posts.replace('억', '00000000')
-                
-        return int(posts)
-    except Exception as e:
-        print("오류 발생:", e)
-
-def get_insta_followers(driver):
-    """팔로워 수 크롤링 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-    """
-    try:
-        driver.implicitly_wait(10)
-        followers = driver.find_element(By.XPATH, '//a[contains(@href, "/followers/")]/span').get_attribute("title")
-        if '만' in followers:
-            if '.' in followers:
-                followers = followers.replace('.', '')
-                followers = followers.replace('만', '000')
-            else: 
-                followers = followers.replace('만', '0000')
-        if '억' in followers:
-            if '.' in followers:
-                followers = followers.replace('.', '')
-                followers = followers.replace('억', '0000000')
-            else:
-                followers = followers.replace('억', '00000000')
-
-        return int(followers)
-    except Exception as e:
-        print("오류 발생:", e)
-
-def get_insta_following(driver):
-    """팔로잉 수 크롤링 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-    """
-    try:
-        driver.implicitly_wait(10)
-        following = driver.find_element(By.XPATH, '//a[contains(@href, "/following/")]/span').text
-        if '만' in following:
-            if '.' in following:
-                following = following.replace('.', '')
-                following = following.replace('만', '000')
-            else: 
-                following = following.replace('만', '0000')
-        if '억' in following:
-            if '.' in following:
-                following = following.replace('.', '')
-                following = following.replace('억', '0000000')
-            else:
-                following = following.replace('억', '00000000')
-
-        return int(following)
-    except Exception as e:
-        print("오류 발생:", e)
-        
-def get_insta_date(driver):
-    """게시물 개시 날짜 크롤링 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-    """
-    try:
-        driver.implicitly_wait(10)
-        datetime = driver.find_element(By.CSS_SELECTOR, 'time').get_attribute("datetime") # "2024-00-00T00:00:00.000Z"
-        index = datetime.find('T')
-        date = datetime[0:index].replace('-', '')
-
-        return int(date)
-    except Exception as e:
-        print("오류 발생:", e)
-
-def get_insta_like(driver):
-    """게시물에 달린 좋아요 수 크롤링 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-    """
-    try:
-        driver.implicitly_wait(10)
-        like = driver.find_element(By.CSS_SELECTOR, 'section._ae5m > div > div > span > a > span > span').text
-
-        if '만' in like:
-            if '.' in like:
-                like = like.replace('.', '')
-                like = like.replace('만', '000')
-            else: 
-                like = like.replace('만', '0000')
-        if '억' in like:
-            if '.' in like:
-                like = like.replace('.', '')
-                like = like.replace('억', '0000000')
-            else:
-                like = like.replace('억', '00000000')
-
-        return int(like)
-    except Exception as e:
-        print("오류 발생:", e)
-
-def get_insta_content(driver):
-    """본문 내용 크롤링 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-    """
-    try:
-        driver.implicitly_wait(10)
-        content = driver.find_element(By.CSS_SELECTOR, 'div._a9zs').text
-
-        return content
-    except Exception as e:
-        print("오류 발생:", e)
-
-def get_insta_tags(driver):
-    """본문 내 해시태그 크롤링 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-    """
-    try:
-        driver.implicitly_wait(10)
-        tags = re.findall(r'#[^W#,\\]+', get_insta_content(driver))
-        filteringList = []
-        for i in tags:
-            if ' ' in i:
-                if '\n' in i:
-                    i = i.replace('\n', '')
-                index = i.find(' ')
-                filteringList.append(i[0:index])
-            else:
-                if '\n' in i:
-                    i = i.replace('\n', '')
-                filteringList.append(i[0:index])
-        
-        listTostring = '\n'.join(filteringList)
-
-        if listTostring is None:
-            return None
-        
-        return listTostring, len(filteringList)
-    except Exception as e:
-        print("오류 발생:", e)
-
 def get_insta_comment_most_like(driver):
     """본문 댓글 내 좋아요를 가장 많이 받은 댓글 크롤링 함수.
     
@@ -280,9 +116,9 @@ search_insta_account(driver, generate_account_URL(instagramURL, instagramAccount
 
 profileDict = {
     'name': instagramAccount,
-    'posts': get_insta_posts(driver), 
-    'followers': get_insta_followers(driver), 
-    'following': get_insta_following(driver),
+    'posts': crawling_modules.get_insta_posts(driver),
+    'followers': crawling_modules.get_insta_followers(driver), 
+    'following': crawling_modules.get_insta_following(driver),
 }
 
 # 첫 번째 게시글 선택
@@ -296,22 +132,23 @@ postList = []
 for i in range(1):
     driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
     driver.implicitly_wait(10)
-    tags, tag_length = get_insta_tags(driver) # 해시태그, 해시태그 개수를 튜플로 반환해서 언패킹.
+    tags, tag_length = crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)) # 해시태그, 해시태그 개수를 튜플로 반환해서 언패킹.
     postDict = {
-        'date': get_insta_date(driver),
-        'like': get_insta_like(driver), 
-        'content': get_insta_content(driver), 
+        'date': crawling_modules.get_insta_date(driver),
+        'like': crawling_modules.get_insta_like(driver), 
+        'content': crawling_modules.get_insta_content(driver), 
         'tags': tags,
         'tag_length': tag_length,
-        'comment_most_like': get_insta_comment_most_like(driver),
+        # 'comment_most_like': get_insta_comment_most_like(driver),
     }
     postList.append(postDict)
 profileDict['post'] = postList
+print(profileDict)
 
 # 크롤링한 데이터를 DB에 업로드.
-# if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
-#     serializer = ProfileSerializer(data=profileDict)
-#     if serializer.is_valid():
-#         serializer.save()
-#     else:
-#         print(serializer.errors)
+if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
+    serializer = ProfileSerializer(data=profileDict)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        print(serializer.errors)
