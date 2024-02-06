@@ -74,7 +74,6 @@ WSGI_APPLICATION = 'django_piium_insta_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = DATABASES
 
 

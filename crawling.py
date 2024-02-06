@@ -25,7 +25,7 @@ administratorPW = 'dlsxjstlq1234!!'
 instagramURL = 'https://www.instagram.com/'
 
 # 인스타그램 계정명 변수
-instagramAccount = 'todayhouse'
+instagramAccount = 'incheon_gov'
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
@@ -83,8 +83,20 @@ def get_insta_posts(driver):
     try:
         driver.implicitly_wait(10)
         posts = driver.find_element(By.CSS_SELECTOR, 'li:nth-child(1)>span').text
-
-        return posts
+        if '만' in posts:
+            if '.' in posts:
+                posts = posts.replace('.', '')
+                posts = posts.replace('만', '000')
+            else: 
+                posts = posts.replace('만', '0000')
+        if '억' in posts:
+            if '.' in posts:
+                posts = posts.replace('.', '')
+                posts = posts.replace('억', '0000000')
+            else:
+                posts = posts.replace('억', '00000000')
+                
+        return int(posts)
     except Exception as e:
         print("오류 발생:", e)
 
@@ -97,8 +109,20 @@ def get_insta_followers(driver):
     try:
         driver.implicitly_wait(10)
         followers = driver.find_element(By.XPATH, '//a[contains(@href, "/followers/")]/span').get_attribute("title")
+        if '만' in followers:
+            if '.' in followers:
+                followers = followers.replace('.', '')
+                followers = followers.replace('만', '000')
+            else: 
+                followers = followers.replace('만', '0000')
+        if '억' in followers:
+            if '.' in followers:
+                followers = followers.replace('.', '')
+                followers = followers.replace('억', '0000000')
+            else:
+                followers = followers.replace('억', '00000000')
 
-        return followers
+        return int(followers)
     except Exception as e:
         print("오류 발생:", e)
 
@@ -111,8 +135,20 @@ def get_insta_following(driver):
     try:
         driver.implicitly_wait(10)
         following = driver.find_element(By.XPATH, '//a[contains(@href, "/following/")]/span').text
+        if '만' in following:
+            if '.' in following:
+                following = following.replace('.', '')
+                following = following.replace('만', '000')
+            else: 
+                following = following.replace('만', '0000')
+        if '억' in following:
+            if '.' in following:
+                following = following.replace('.', '')
+                following = following.replace('억', '0000000')
+            else:
+                following = following.replace('억', '00000000')
 
-        return following
+        return int(following)
     except Exception as e:
         print("오류 발생:", e)
         
@@ -168,13 +204,25 @@ def get_insta_tags(driver):
     """
     try:
         driver.implicitly_wait(10)
-        tags = re.findall(r'#[^Ws#,\\]+', get_insta_content(driver))
-        listTostring = '\n'.join(tags)
+        tags = re.findall(r'#[^W#,\\]+', get_insta_content(driver))
+        filteringList = []
+        for i in tags:
+            if ' ' in i:
+                if '\n' in i:
+                    i = i.replace('\n', '')
+                index = i.find(' ')
+                filteringList.append(i[0:index])
+            else:
+                if '\n' in i:
+                    i = i.replace('\n', '')
+                filteringList.append(i[0:index])
+        
+        listTostring = '\n'.join(filteringList)
 
         if listTostring is None:
             return None
-
-        return listTostring
+        
+        return listTostring, len(filteringList)
     except Exception as e:
         print("오류 발생:", e)
 
@@ -205,14 +253,16 @@ driver.implicitly_wait(10)
 postList = []
 
 # 원하는 게시물 수만큼 반복
-for i in range(1):
+for i in range(3):
     driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
     driver.implicitly_wait(10)
+    tags, tag_length = get_insta_tags(driver) # 해시태그, 해시태그 개수를 튜플로 반환해서 언패킹.
     postDict = {
         'date': get_insta_date(driver),
         'like': get_insta_like(driver), 
         'content': get_insta_content(driver), 
-        'tags': get_insta_tags(driver),
+        'tags': tags,
+        'tag_length': tag_length,
     }
     postList.append(postDict)
 profileDict['post'] = postList

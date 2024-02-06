@@ -29,5 +29,16 @@ ll = ['aaa', 'bbb', 'ccc']
 
 
 # tags = re.findall(r'#[^Ws#,\\]+', ll)
-listTostring = '\n'.join(ll)
-print(listTostring)
+# listTostring = '\n'.join(ll)
+# print(listTostring)
+
+tags = ['#첫번째 공백', '#두번쨰', '#세번째 ']
+fillist = []
+for i in tags:
+    if ' ' in i:
+        index = i.find(' ')
+        fillist.append(i[0:index])
+    else:
+        fillist.append(i[0:index])
+
+print(fillist)
