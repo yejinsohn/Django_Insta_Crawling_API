@@ -13,7 +13,7 @@ def get_insta_comment_most_like(driver):
 
         for idx in range(len(like_list)):
             if '좋아요' in like_list[idx].text:
-                comment_like_dict[idx] = int(like_list[idx].text.replace('좋아요 ', '').replace('개', ''))
+                comment_like_dict[idx] = int(like_list[idx].text.replace('좋아요 ', '').replace(',', '').replace('개', ''))
             else:
                 comment_like_dict[idx] = 0
 
@@ -28,8 +28,7 @@ def get_insta_comment_most_like(driver):
         date = comment_most_like_date[0:index].replace('-', '')
 
         comment_most_like = comment_most_like_name + '\n' + comment_most_like_content + '\n' + date + '\n' + str(list(dict(sorted_comment_like_dict).values())[0])
-        print(comment_most_like)
 
         return comment_most_like
     except Exception as e:
-        print("오류 발생:", e)
+        print("오류 발생 get_insta_comment_most_like:", e)

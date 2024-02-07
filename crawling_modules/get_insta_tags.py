@@ -26,6 +26,6 @@ def get_insta_tags(driver, content):
         if listTostring is None:
             return None
         
-        return listTostring, len(filteringList)
+        return listTostring
     except Exception as e:
-        print("오류 발생:", e)
+        print("오류 발생 get_insta_tags:", e)

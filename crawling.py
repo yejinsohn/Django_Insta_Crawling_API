@@ -26,7 +26,7 @@ administratorPW = 'dlsxjstlq1234!!'
 instagramURL = 'https://www.instagram.com/'
 
 # 인스타그램 계정명 변수
-instagramAccount = 'incheon_gov'
+instagramAccount = 'dlwlrma'
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
@@ -54,39 +54,37 @@ postList = []
 # 첫 번째 게시글 선택 후 정보 크롤링
 driver.find_element(By.CSS_SELECTOR, 'div._aagw').click()
 driver.implicitly_wait(10)
-tags, tag_length = crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)) # 해시태그, 해시태그 개수를 튜플로 반환해서 언패킹.
 postDict = {
     'date': crawling_modules.get_insta_date(driver),
     'like': crawling_modules.get_insta_like(driver), 
     'content': crawling_modules.get_insta_content(driver), 
-    'tags': tags,
-    'tag_length': tag_length,
+    'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
+    'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
+    'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
     'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
 }
 postList.append(postDict)
 
 # 원하는 게시물 수만큼 반복
-for i in range(1):
+for i in range(6):
     driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
     driver.implicitly_wait(10)
-    tags, tag_length = crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)) # 해시태그, 해시태그 개수를 튜플로 반환해서 언패킹.
     postDict = {
         'date': crawling_modules.get_insta_date(driver),
         'like': crawling_modules.get_insta_like(driver), 
         'content': crawling_modules.get_insta_content(driver), 
-        'tags': tags,
-        'tag_length': tag_length,
+        'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
+        'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
+        'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
         'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
     }
     postList.append(postDict)
 profileDict['post'] = postList
 
-# print(profileDict)
-
 # 크롤링한 데이터를 DB에 업로드.
-if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
-    serializer = ProfileSerializer(data=profileDict)
-    if serializer.is_valid():
-        serializer.save()
-    else:
-        print(serializer.errors)
+# if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
+#     serializer = ProfileSerializer(data=profileDict)
+#     if serializer.is_valid():
+#         serializer.save()
+#     else:
+#         print(serializer.errors)
