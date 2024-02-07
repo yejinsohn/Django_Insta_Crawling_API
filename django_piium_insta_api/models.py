@@ -18,6 +18,7 @@ class Post(models.Model):
     content = models.TextField(null=True) # 인스타 게시물 본문
     tags = models.TextField(null=True, blank=True) # 인스타 게시물 해시태그
     tag_length = models.IntegerField(null=True) # 인스타 게시물 해시태그 개수
+    comment_most_like = models.TextField(null=True) # 인스타 게시물 댓글 내 좋아요를 많이 받은 댓글
 
     # def __str__(self):
     #     return self.date

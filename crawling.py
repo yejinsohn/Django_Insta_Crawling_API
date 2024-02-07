@@ -61,7 +61,7 @@ postDict = {
     'content': crawling_modules.get_insta_content(driver), 
     'tags': tags,
     'tag_length': tag_length,
-    # 'comment_most_like': get_insta_comment_most_like(driver),
+    'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
 }
 postList.append(postDict)
 
@@ -76,17 +76,17 @@ for i in range(1):
         'content': crawling_modules.get_insta_content(driver), 
         'tags': tags,
         'tag_length': tag_length,
-        # 'comment_most_like': get_insta_comment_most_like(driver),
+        'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
     }
     postList.append(postDict)
 profileDict['post'] = postList
 
-print(profileDict)
+# print(profileDict)
 
 # 크롤링한 데이터를 DB에 업로드.
-# if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
-#     serializer = ProfileSerializer(data=profileDict)
-#     if serializer.is_valid():
-#         serializer.save()
-#     else:
-#         print(serializer.errors)
+if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
+    serializer = ProfileSerializer(data=profileDict)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        print(serializer.errors)
