@@ -36,57 +36,11 @@ chrome_options.add_experimental_option("detach", True)
 driver = wb.Chrome(options=chrome_options)
 driver.get(instagramURL)
 
-def login_insta_admin(driver, ID, PW):
-    """관리자 인스타그램 자동 로그인 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-        ID(string): 관리자의 인스타그램 아이디.
-        PW(string): 관리자의 인스타그램 패스워드.
-    """
-    driver.implicitly_wait(10)
-    inputID = driver.find_element(By.CSS_SELECTOR, 'input[name="username"]')
-    inputID.send_keys(ID)
-    inputPW = driver.find_element(By.CSS_SELECTOR, 'input[name="password"]')
-    inputPW.send_keys(PW)
-    driver.implicitly_wait(10)
-    inputID.send_keys(Keys.ENTER)
+crawling_modules.login_insta_admin(driver, administratorID, administratorPW)
 
-def generate_account_URL(URL, account):
-    """검색하고자 하는 계정 URL 생성 함수.
-    
-    Args:
-        URL(string): 생성하고자 하는 SNS의 URL.
-        account(string): 검색하고자 하는 계정의 이름.
+crawling_modules.searching_insta_account.search_insta_account(driver, crawling_modules.searching_insta_account.generate_account_URL(instagramURL, instagramAccount))
 
-    Returns:
-        generatedURL(string): URL과 account를 합친 계정 URL 문자열을 반환합니다.
-    """
-    generatedURL = URL + account
-    return generatedURL
-
-def search_insta_account(driver, URL):
-    """인스타그램 게정 검색 함수.
-    
-    Args:
-        driver(webdriver): selenium의 webdriver.
-        URL(string): 검색하고자 하는 계정 URL.
-    """
-    driver.get(URL)
-    driver.implicitly_wait(50)
-
-login_insta_admin(driver, administratorID, administratorPW)
-
-# 로그인 저장 나중에 하기 버튼
-driver.implicitly_wait(10)
-driver.find_element(By.XPATH, '//div[text()="나중에 하기"]').click()
-
-# 알림 설정 나중에 하기 버튼
-driver.implicitly_wait(10)
-driver.find_element(By.XPATH, '//button[text()="나중에 하기"]').click()
-
-search_insta_account(driver, generate_account_URL(instagramURL, instagramAccount))
-
+# 인스타 프로필의 정보를 갖고있는 딕셔너리
 profileDict = {
     'name': instagramAccount,
     'posts': crawling_modules.get_insta_posts(driver),
@@ -94,12 +48,22 @@ profileDict = {
     'following': crawling_modules.get_insta_following(driver),
 }
 
-# 첫 번째 게시글 선택
-driver.find_element(By.CSS_SELECTOR, 'div._aagw').click()
-driver.implicitly_wait(10)
-
 # 게시물의 정보를 갖고있는 딕셔너리를 담을 리스트
 postList = []
+
+# 첫 번째 게시글 선택 후 정보 크롤링
+driver.find_element(By.CSS_SELECTOR, 'div._aagw').click()
+driver.implicitly_wait(10)
+tags, tag_length = crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)) # 해시태그, 해시태그 개수를 튜플로 반환해서 언패킹.
+postDict = {
+    'date': crawling_modules.get_insta_date(driver),
+    'like': crawling_modules.get_insta_like(driver), 
+    'content': crawling_modules.get_insta_content(driver), 
+    'tags': tags,
+    'tag_length': tag_length,
+    # 'comment_most_like': get_insta_comment_most_like(driver),
+}
+postList.append(postDict)
 
 # 원하는 게시물 수만큼 반복
 for i in range(1):
@@ -116,6 +80,7 @@ for i in range(1):
     }
     postList.append(postDict)
 profileDict['post'] = postList
+
 print(profileDict)
 
 # 크롤링한 데이터를 DB에 업로드.

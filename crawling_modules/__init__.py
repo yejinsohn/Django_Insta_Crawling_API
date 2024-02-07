@@ -6,3 +6,5 @@ from .get_insta_like import *
 from .get_insta_content import *
 from .get_insta_tags import *
 from .get_insta_comment_most_like import *
+from .login_insta_admin import *
+from .searching_insta_account import *
