@@ -24,4 +24,4 @@ def get_insta_following(driver):
 
         return int(following)
     except Exception as e:
-        print("오류 발생:", e)
+        print("오류 발생 get_insta_following:", e)

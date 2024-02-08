@@ -26,7 +26,7 @@ administratorPW = 'dlsxjstlq1234!!'
 instagramURL = 'https://www.instagram.com/'
 
 # 인스타그램 계정명 변수
-instagramAccount = 'dlwlrma'
+instagramAccount = 'jxxvvxxk'
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
@@ -46,6 +46,13 @@ profileDict = {
     'posts': crawling_modules.get_insta_posts(driver),
     'followers': crawling_modules.get_insta_followers(driver), 
     'following': crawling_modules.get_insta_following(driver),
+    'threads': crawling_modules.get_insta_threads(driver),
+    'authentication': crawling_modules.get_insta_authentication(driver),
+    'introduction': crawling_modules.get_insta_introduction(driver),
+    'tag_id': crawling_modules.get_insta_introduction_tag_ID(driver, crawling_modules.get_insta_introduction(driver)),
+    'tag_length': crawling_modules.get_insta_introduction_tag_length(driver, crawling_modules.get_insta_introduction(driver)),
+    'highlight_count': crawling_modules.get_insta_highlight_count(driver),
+    'location': crawling_modules.get_insta_location(driver),
 }
 
 # 게시물의 정보를 갖고있는 딕셔너리를 담을 리스트
@@ -66,7 +73,7 @@ postDict = {
 postList.append(postDict)
 
 # 원하는 게시물 수만큼 반복
-for i in range(6):
+for i in range(1):
     driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
     driver.implicitly_wait(10)
     postDict = {
@@ -81,10 +88,11 @@ for i in range(6):
     postList.append(postDict)
 profileDict['post'] = postList
 
+
 # 크롤링한 데이터를 DB에 업로드.
-# if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
-#     serializer = ProfileSerializer(data=profileDict)
-#     if serializer.is_valid():
-#         serializer.save()
-#     else:
-#         print(serializer.errors)
+if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
+    serializer = ProfileSerializer(data=profileDict)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        print(serializer.errors)
