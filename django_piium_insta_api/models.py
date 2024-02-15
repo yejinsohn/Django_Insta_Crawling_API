@@ -12,6 +12,7 @@ class Profile(models.Model):
     introduction = models.TextField(null=True, blank=True) # 인스타 소개 글
     tag_id = models.TextField(null=True, blank=True) # 인스타 소개 사용자 태그
     tag_length = models.IntegerField(null=True, blank=True) # 인스타 소개 사용자 태그 수
+    highlight_count = models.IntegerField(null=True, blank=True) # 인스타 하이라이트 그룹 개수
 
 class Post(models.Model):
     profile = models.ForeignKey(Profile, related_name='post', null=True, on_delete=models.CASCADE)
@@ -22,3 +23,12 @@ class Post(models.Model):
     tag_length = models.IntegerField(null=True) # 인스타 게시물 해시태그 개수
     user_tags = models.TextField(null=True, blank=True) # 인스타 게시물 사용자태그
     comment_most_like = models.TextField(null=True, blank=True) # 인스타 게시물 댓글 내 좋아요를 많이 받은 댓글
+    location = models.TextField(null=True, blank=True) # 인스타 게시물 위치
+    content_type = models.TextField(null=True, blank=True) # 인스타 게시물 타입
+
+class Reels(models.Model):
+    profile = models.ForeignKey(Profile, related_name='reels', null=True, on_delete=models.CASCADE)
+    reels_view = models.IntegerField(null=True)
+    reels_like = models.IntegerField(null=True)
+    reels_comment_count = models.TextField(null=True, blank=True)
+    reels_caption = models.TextField(null=True, blank=True)

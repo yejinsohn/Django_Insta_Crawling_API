@@ -26,7 +26,7 @@ administratorPW = 'dlsxjstlq1234!!'
 instagramURL = 'https://www.instagram.com/'
 
 # 인스타그램 계정명 변수
-instagramAccount = 'jxxvvxxk'
+instagramAccount = 'mayersung'
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
@@ -52,7 +52,6 @@ profileDict = {
     'tag_id': crawling_modules.get_insta_introduction_tag_ID(driver, crawling_modules.get_insta_introduction(driver)),
     'tag_length': crawling_modules.get_insta_introduction_tag_length(driver, crawling_modules.get_insta_introduction(driver)),
     'highlight_count': crawling_modules.get_insta_highlight_count(driver),
-    'location': crawling_modules.get_insta_location(driver),
 }
 
 # 게시물의 정보를 갖고있는 딕셔너리를 담을 리스트
@@ -61,38 +60,65 @@ postList = []
 # 첫 번째 게시글 선택 후 정보 크롤링
 driver.find_element(By.CSS_SELECTOR, 'div._aagw').click()
 driver.implicitly_wait(10)
-postDict = {
-    'date': crawling_modules.get_insta_date(driver),
-    'like': crawling_modules.get_insta_like(driver), 
-    'content': crawling_modules.get_insta_content(driver), 
-    'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
-    'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
-    'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
-    'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
-}
-postList.append(postDict)
+# postDict = {
+#     'date': crawling_modules.get_insta_date(driver),
+#     'like': crawling_modules.get_insta_like(driver), 
+#     'content': crawling_modules.get_insta_content(driver), 
+#     'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
+#     'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
+#     'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
+#     'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
+#     'location': crawling_modules.get_insta_location(driver),
+#     'content_type': crawling_modules.get_insta_content_type(driver),
+# }
+# postList.append(postDict)
 
-# 원하는 게시물 수만큼 반복
-for i in range(1):
-    driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
+# # 원하는 게시물 수만큼 반복
+# for i in range(1):
+#     driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
+#     driver.implicitly_wait(10)
+#     postDict = {
+#         'date': crawling_modules.get_insta_date(driver),
+#         'like': crawling_modules.get_insta_like(driver), 
+#         'content': crawling_modules.get_insta_content(driver), 
+#         'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
+#         'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
+#         'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
+#         'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
+#         'location': crawling_modules.get_insta_location(driver),
+#         'content_type': crawling_modules.get_insta_content_type(driver),
+#     }
+#     postList.append(postDict)
+# profileDict['post'] = postList
+
+# 릴스의 정보를 갖고있는 딕셔너리를 담을 리스트
+reelsList = []
+
+driver.implicitly_wait(10)
+driver.find_element(By.CSS_SELECTOR, 'div.x160vmok.x10l6tqk.x1eu8d0j.x1vjfegm').click()
+
+driver.get(crawling_modules.searching_insta_account.generate_account_URL(instagramURL, instagramAccount) + '/reels/')
+driver.implicitly_wait(50)
+
+driver.implicitly_wait(10)
+# driver.find_element(By.CSS_SELECTOR, 'div._aajy').click()
+for i in range(2):
+    reels_data = driver.find_elements(By.CSS_SELECTOR, 'div._aajy')
     driver.implicitly_wait(10)
-    postDict = {
-        'date': crawling_modules.get_insta_date(driver),
-        'like': crawling_modules.get_insta_like(driver), 
-        'content': crawling_modules.get_insta_content(driver), 
-        'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
-        'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
-        'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
-        'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
+    reelsDict = {
+        'reels_view': crawling_modules.get_reels_view(driver, reels_data[i]),
+        # 'reels_comment_count': crawling_modules.get_reels_comment_count(driver, reels_data[i]),
+        'reels_caption': crawling_modules.get_reels_caption(driver, reels_data[i]),
+        'reels_like': crawling_modules.get_reels_like(driver, reels_data[i]),
     }
-    postList.append(postDict)
-profileDict['post'] = postList
-
+    reelsList.append(reelsDict)
+profileDict['reels'] = reelsList
+print(reelsList)
 
 # 크롤링한 데이터를 DB에 업로드.
-if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
-    serializer = ProfileSerializer(data=profileDict)
-    if serializer.is_valid():
-        serializer.save()
-    else:
-        print(serializer.errors)
+# if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
+#     serializer = ProfileSerializer(data=profileDict)
+#     if serializer.is_valid():
+#         serializer.save()
+#     else:
+#         print(serializer.errors)
