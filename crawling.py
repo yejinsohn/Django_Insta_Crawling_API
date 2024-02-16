@@ -60,36 +60,36 @@ postList = []
 # 첫 번째 게시글 선택 후 정보 크롤링
 driver.find_element(By.CSS_SELECTOR, 'div._aagw').click()
 driver.implicitly_wait(10)
-# postDict = {
-#     'date': crawling_modules.get_insta_date(driver),
-#     'like': crawling_modules.get_insta_like(driver), 
-#     'content': crawling_modules.get_insta_content(driver), 
-#     'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
-#     'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
-#     'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
-#     'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
-#     'location': crawling_modules.get_insta_location(driver),
-#     'content_type': crawling_modules.get_insta_content_type(driver),
-# }
-# postList.append(postDict)
+postDict = {
+    'date': crawling_modules.get_insta_date(driver),
+    'like': crawling_modules.get_insta_like(driver), 
+    'content': crawling_modules.get_insta_content(driver), 
+    'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
+    'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
+    'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
+    'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
+    'location': crawling_modules.get_insta_location(driver),
+    'content_type': crawling_modules.get_insta_content_type(driver),
+}
+postList.append(postDict)
 
-# # 원하는 게시물 수만큼 반복
-# for i in range(1):
-#     driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
-#     driver.implicitly_wait(10)
-#     postDict = {
-#         'date': crawling_modules.get_insta_date(driver),
-#         'like': crawling_modules.get_insta_like(driver), 
-#         'content': crawling_modules.get_insta_content(driver), 
-#         'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
-#         'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
-#         'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
-#         'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
-#         'location': crawling_modules.get_insta_location(driver),
-#         'content_type': crawling_modules.get_insta_content_type(driver),
-#     }
-#     postList.append(postDict)
-# profileDict['post'] = postList
+# 원하는 게시물 수만큼 반복
+for i in range(1):
+    driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
+    driver.implicitly_wait(10)
+    postDict = {
+        'date': crawling_modules.get_insta_date(driver),
+        'like': crawling_modules.get_insta_like(driver), 
+        'content': crawling_modules.get_insta_content(driver), 
+        'tags': crawling_modules.get_insta_tags(driver, crawling_modules.get_insta_content(driver)),
+        'tag_length': crawling_modules.get_insta_tags_length(driver, crawling_modules.get_insta_content(driver)),
+        'user_tags': crawling_modules.get_insta_user_tags(driver, crawling_modules.get_insta_content(driver)),
+        'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
+        'location': crawling_modules.get_insta_location(driver),
+        'content_type': crawling_modules.get_insta_content_type(driver),
+    }
+    postList.append(postDict)
+profileDict['post'] = postList
 
 # 릴스의 정보를 갖고있는 딕셔너리를 담을 리스트
 reelsList = []
@@ -107,18 +107,18 @@ for i in range(2):
     driver.implicitly_wait(10)
     reelsDict = {
         'reels_view': crawling_modules.get_reels_view(driver, reels_data[i]),
+        'reels_like': crawling_modules.get_reels_like(driver, reels_data[i]),
         # 'reels_comment_count': crawling_modules.get_reels_comment_count(driver, reels_data[i]),
         'reels_caption': crawling_modules.get_reels_caption(driver, reels_data[i]),
-        'reels_like': crawling_modules.get_reels_like(driver, reels_data[i]),
     }
     reelsList.append(reelsDict)
 profileDict['reels'] = reelsList
-print(reelsList)
+print(profileDict)
 
 # 크롤링한 데이터를 DB에 업로드.
-# if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
-#     serializer = ProfileSerializer(data=profileDict)
-#     if serializer.is_valid():
-#         serializer.save()
-#     else:
-#         print(serializer.errors)
+if __name__ == '__main__': # 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 동작하도록 구현.
+    serializer = ProfileSerializer(data=profileDict)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        print(serializer.errors)

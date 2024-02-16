@@ -29,6 +29,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         profile = Profile.objects.create(**validated_data) # Profile데이터
         for post_data in posts_data:
             Post.objects.create(profile = profile, **post_data) # Post데이터
+
         for reels_data in reelses_data:
-            Post.objects.create(profile = profile, **reels_data) # Reels데이터
+            Reels.objects.create(profile = profile, **reels_data) # Reels데이터
+
         return profile

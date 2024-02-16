@@ -30,5 +30,5 @@ class Reels(models.Model):
     profile = models.ForeignKey(Profile, related_name='reels', null=True, on_delete=models.CASCADE)
     reels_view = models.IntegerField(null=True)
     reels_like = models.IntegerField(null=True)
-    reels_comment_count = models.TextField(null=True, blank=True)
+    # reels_comment_count = models.TextField(null=True, blank=True)
     reels_caption = models.TextField(null=True, blank=True)
