@@ -9,11 +9,14 @@ def get_reels_date(driver, reels_data):
     try:
         driver.implicitly_wait(10)
         reels_data.click()
-        time_element = driver.find_element_by_class_name("_a9ze")
-        reels_date = time_element.get_attribute("title")
+
+        reels_upload_date = driver.find_element(By.CSS_SELECTOR, 'time').get_attribute("datetime") # "2024-00-00T00:00:00.000Z"
+        index = reels_upload_date.find('T')
+        reels_date = reels_upload_date[0:index].replace('-', '')
+
         driver.implicitly_wait(10)
         driver.find_element(By.CSS_SELECTOR, 'div.x160vmok.x10l6tqk.x1eu8d0j.x1vjfegm').click()
 
-        return reels_date
+        return int(reels_date)
     except Exception as e:
         print("오류 발생 get_reels_date:", e)

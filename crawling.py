@@ -101,7 +101,6 @@ driver.get(crawling_modules.searching_insta_account.generate_account_URL(instagr
 driver.implicitly_wait(50)
 
 driver.implicitly_wait(10)
-# driver.find_element(By.CSS_SELECTOR, 'div._aajy').click()
 for i in range(2):
     reels_data = driver.find_elements(By.CSS_SELECTOR, 'div._aajy')
     driver.implicitly_wait(10)
@@ -110,6 +109,7 @@ for i in range(2):
         'reels_like': crawling_modules.get_reels_like(driver, reels_data[i]),
         # 'reels_comment_count': crawling_modules.get_reels_comment_count(driver, reels_data[i]),
         'reels_caption': crawling_modules.get_reels_caption(driver, reels_data[i]),
+        'reels_date': crawling_modules.get_reels_date(driver, reels_data[i]),
     }
     reelsList.append(reelsDict)
 profileDict['reels'] = reelsList

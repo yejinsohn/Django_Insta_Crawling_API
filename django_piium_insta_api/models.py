@@ -32,3 +32,4 @@ class Reels(models.Model):
     reels_like = models.IntegerField(null=True)
     # reels_comment_count = models.TextField(null=True, blank=True)
     reels_caption = models.TextField(null=True, blank=True)
+    reels_date = models.IntegerField(null=True)
