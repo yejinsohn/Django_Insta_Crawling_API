@@ -1,57 +1,52 @@
 <template>
   <div>
-    <todo-header></todo-header>
+    <insta-header></insta-header>
     <nav>
       <router-link to="/">홈</router-link>
 
     </nav>
     <router-view/>
-    <todo-content></todo-content>
-    <todo-footer></todo-footer>
+    <insta-content v-bind:propsdata="userList"></insta-content>
+    <insta-footer></insta-footer>
+    <div id="app1">
+      <div>{{ message }}</div>
+    </div>
   </div>
 </template>
 
 <script>
-import TodoHeader from './components/Header.vue';
-import TodoContent from './components/Content.vue';
-import TodoFooter from './components/Footer.vue';
+import Header from './components/Header.vue';
+import Content from './components/Content.vue';
+import Footer from './components/Footer.vue';
 import axios from 'axios';
 
 
 let url = 'http://localhost:8000/Profile/'
-axios.get(url)
-.then(function(response){
-  console.log(response);
-  
-})
-.catch(function(response){
-  console.log(response);
-})
 
 export default {
-  data: function() {
+  data: () => {
     return {
-      name: 'home',
-      imageUrl: null,
-    }    
+      userList: []
+    };
   },
   components: {
-    'todo-header': TodoHeader,
-    'todo-content': TodoContent,
-    'todo-footer': TodoFooter,
+    'insta-header': Header,
+    'insta-content': Content,
+    'insta-footer': Footer,
   },
-  methods: {
-    getCats() {
-      axios({
-        url: 'https://dog.ceo/dog-api/breads-list',
-        method: 'get'
-      })
-      .then((res) => {
-        this.imageUrl = res.data[0].url
-      })
-    }
+  mounted() {
+    axios({
+      method: "GET",
+      url: url
+    })
+    .then(response => {
+      this.userList = response.data;
+    })
+    .catch(response => {
+      console.log("Failed", response);
+    });
   },
-}
+};
 </script>
 
 <style>
