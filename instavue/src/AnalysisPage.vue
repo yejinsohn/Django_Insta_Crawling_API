@@ -1,5 +1,5 @@
 <template>
-    <div class="content_analysis">   
+    <div class="content_analysis" :propsdata="userList">
       <div class="user_info1">
         <v-row style="text-align: center">
           <v-col v-for="(data, index) in propsdata" :key="index" cols="1" md="2" lg="2">
@@ -97,14 +97,12 @@
   </template>
   
   <script>
-  export default {
-    props: ["propsdata"]
-  };
+
   </script>
   
   <style>
     .content_analysis {
-      padding: 70px 30px;
+      padding: 85px 30px 0 30px;
       display: flex;
       flex-direction: row;
       justify-content: center;

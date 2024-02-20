@@ -26,7 +26,7 @@ administratorPW = 'dlsxjstlq1234!!'
 instagramURL = 'https://www.instagram.com/'
 
 # 인스타그램 계정명 변수
-instagramAccount = 'mayersung'
+instagramAccount = 'musinsa.official'
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
