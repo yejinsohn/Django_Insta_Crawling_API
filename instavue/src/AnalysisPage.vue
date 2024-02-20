@@ -97,7 +97,9 @@
   </template>
   
   <script>
-
+  export default {
+    props: ["propsdata"]
+  };
   </script>
   
   <style>

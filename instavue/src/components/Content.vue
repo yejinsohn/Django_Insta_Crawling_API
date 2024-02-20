@@ -97,8 +97,34 @@
   </template>
   
   <script>
+  import axios from 'axios';
+  let url = 'http://localhost:8000/';
+  const name = 'incheon_gov';
+
   export default {
-    props: ["propsdata"]
+    data: () => {
+      return {
+        userList: []
+      };
+    },
+    props: ["propsdata"],
+    methods: {
+      post: async function() {
+        await axios({
+          method: "GET",
+          url: url + `crawling_method/?input_data=${name}`
+        })
+        .then((response) => {
+          this.userList = response.data;
+          // this.$emit('saved')
+          console.log(this.userList.length);
+          console.log("success", response);
+        })
+        .catch((error) => {
+          console.log("Failed to get userList", error.response);
+        });
+      },
+    },
   };
   </script>
   

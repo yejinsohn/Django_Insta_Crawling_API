@@ -8,5 +8,6 @@ router.register('Post', views.PostViewSet) #PostViewSet 과 Post router 등록
 router.register('Reels', views.ReelsViewSet) #ReelsViewSet 과 Reels router 등록
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
+    path('crawling_method/', views.crawling_method)
 ]

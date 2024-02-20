@@ -23,7 +23,8 @@ import Footer from './components/Footer.vue';
 import axios from 'axios';
 
 
-let url = 'http://localhost:8000/Profile/'
+let url = 'http://localhost:8000/';
+const username = 'incheon_gov';
 
 export default {
   data: () => {
@@ -38,7 +39,7 @@ export default {
   mounted() {
     axios({
       method: "GET",
-      url: url
+      url: url + `crawling_method/?input_data=${username}`
     })
     .then(response => {
       this.userList = response.data;
@@ -46,13 +47,28 @@ export default {
       this.$router.push({ name: 'analysis', params: { userList: this.userList } });
     })
     .catch(response => {
-      console.log("Failed", response);
+      console.log("Failed to GET Data", response);
     });
   },
   methods: {
     navigateToAnalysisPage() {
       this.$router.push('/analysis');
     },
+    getUserList: function() {
+      axios({
+        method: "GET",
+        url: url + `crawling_method/?input_data=${username}`
+      }) 
+      .then(response => {
+        this.userList = response.data;
+        console.log(response);
+      })
+      .catch(response => {
+        console.log("Failed", response);
+      });
+    },
+    updateUserList: function() {},
+    deleteUserList: function() {}
   },
 };
 </script>
