@@ -2,6 +2,9 @@
     <div class="content_analysis" :propsdata="userList">
       <div class="user_info1">
         <v-row style="text-align: center">
+          <!-- <v-col cols="1" md="2" lg="2">
+            <div></div>
+          </v-col> -->
           <v-col cols="1" md="2" lg="2">
             <h2>@{{ propsdata.name }}</h2>
           </v-col>
@@ -32,8 +35,9 @@
       <div class="user_info2">
         <v-row style="line-height: 70px">
           <v-col cols="12">
-            <h3>평균 좋아요 수:</h3>
-            <h3>평균 댓글 수:</h3>
+            <h3>하이라이트 그룹: {{ propsdata.highlight_count }}</h3>
+            <h3>게시글 평균 좋아요 수: {{ calculateAverageLikes(propsdata.post).toLocaleString() }}개</h3>
+            <h3>릴스 평균 좋아요 수: {{ calculateAverageReelsLikes(propsdata.reels).toLocaleString() }}개</h3>
           </v-col>
         </v-row>
       </div>       
@@ -42,53 +46,21 @@
       </div> 
       <div class="post">
         <v-container style="display: flex; gap: 20px;">
-          <v-card style="width: 30%" height="300"  @click="navigateToPostPage">
-            <v-card-subtitle>좋아요:</v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-        </v-container>
+        <v-card v-for="(post, index) in propsdata.post" :key="index" style="width: 30%" height="300" @click="navigateToPostPage">
+          <v-card-subtitle>좋아요: {{ post.like.toLocaleString() }}개</v-card-subtitle>
+          <v-card-subtitle>작성일: {{ formatWithDayOfWeek(post.date) }}</v-card-subtitle>
+        </v-card>
+      </v-container>
       </div>
       <div class="analysis">
         <span>릴스 분석</span>
       </div> 
       <div class="post">
         <v-container style="display: flex; gap: 20px;">
-          <v-card style="width: 30%" height="300" @click="navigateToReelsPage">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
-            <v-card-subtitle>댓글:</v-card-subtitle>
-          </v-card>
+          <v-card v-for="(reels, index) in propsdata.reels" :key="index" style="width: 30%" height="300" @click="navigateToReelsPage">
+          <v-card-subtitle>좋아요: {{ reels.reels_like.toLocaleString() }}개</v-card-subtitle>
+          <v-card-subtitle>누적 조회수: {{ reels.reels_view.toLocaleString() }}회</v-card-subtitle>
+        </v-card>
         </v-container>
       </div>
       <div class="analysis">
@@ -107,9 +79,31 @@
     navigateToReelsPage() {
       this.$router.push('/reelsdetail');
     },
+    calculateAverageLikes(posts) {
+      if (posts.length === 0) return 0;
+
+      const totalLikes = posts.reduce((sum, post) => sum + post.like, 0);
+      return totalLikes / posts.length;
+    },
+    calculateAverageReelsLikes(reels) {
+      if (reels.length === 0) return 0;
+
+      const totalLikes = reels.reduce((sum, reel) => sum + reel.reels_like, 0);
+      return totalLikes / reels.length;
+    },
+    formatWithDayOfWeek(date) {
+    const dateString = date.toString();
+
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', options);
+
+    const dayOfWeekOptions = { weekday: 'long' };
+    const dayOfWeek = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', dayOfWeekOptions);
+
+    return `${formattedDate} (${dayOfWeek})`;
   },
-  };
-  
+},
+};
   </script>
   
   <style>
@@ -134,7 +128,7 @@
     }
     .user_info2 {
       width: 34%;
-      min-height: 300px;
+      min-height: 360px;
       border: 1px solid #c2c2c2;
       border-radius: 10px;
       display: flex;
