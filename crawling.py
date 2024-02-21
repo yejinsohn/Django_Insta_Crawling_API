@@ -20,8 +20,8 @@ def insta_crawling(username):
     django.setup()
 
     # 관리자 인스타그램 아이디, 패스워드
-    administratorID = "sonyejin2449@gmail.com"
-    administratorPW = "piium123"
+    administratorID = 'inteonsib412@gmail.com'
+    administratorPW = 'dlsxjstlq1234!!'
 
     # 인스타그램 URL 변수
     instagramURL = 'https://www.instagram.com/'
@@ -41,10 +41,9 @@ def insta_crawling(username):
 
     crawling_modules.searching_insta_account.search_insta_account(driver, crawling_modules.searching_insta_account.generate_account_URL(instagramURL, instagramAccount))
 
-    crawling_modules.get_insta_profile_image(driver, instagramAccount)
-    
     # 인스타 프로필의 정보를 갖고있는 딕셔너리
     profileDict = {
+        'profile_image': crawling_modules.get_insta_profile_image(driver, instagramAccount),
         'name': instagramAccount,
         'posts': crawling_modules.get_insta_posts(driver),
         'followers': crawling_modules.get_insta_followers(driver), 
