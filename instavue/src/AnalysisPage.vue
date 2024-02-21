@@ -23,6 +23,7 @@
         <v-row style="line-height: 70px">
           <v-col cols="12">
             <h3>소개 : {{ propsdata.introduction }}</h3>
+            <h3>태그 아이디 : {{ propsdata.tag_id }}</h3>
             <h3>스레드: {{ propsdata.threads }}</h3>
             <h3>계정 인증: {{ propsdata.authentication }}</h3>
           </v-col>
@@ -41,8 +42,8 @@
       </div> 
       <div class="post">
         <v-container style="display: flex; gap: 20px;">
-          <v-card style="width: 30%" height="300">
-            <v-card-subtitle>좋아요: </v-card-subtitle>
+          <v-card style="width: 30%" height="300"  @click="navigateToPostPage">
+            <v-card-subtitle>좋아요:</v-card-subtitle>
             <v-card-subtitle>댓글:</v-card-subtitle>
           </v-card>
           <v-card style="width: 30%" height="300">
@@ -68,7 +69,7 @@
       </div> 
       <div class="post">
         <v-container style="display: flex; gap: 20px;">
-          <v-card style="width: 30%" height="300">
+          <v-card style="width: 30%" height="300" @click="navigateToReelsPage">
             <v-card-subtitle>좋아요: </v-card-subtitle>
             <v-card-subtitle>댓글:</v-card-subtitle>
           </v-card>
@@ -98,8 +99,17 @@
   
   <script>
   export default {
-    props: ["propsdata"]
+    props: ["propsdata"],
+    methods: {
+    navigateToPostPage() {
+      this.$router.push('/postdetail');
+    },
+    navigateToReelsPage() {
+      this.$router.push('/reelsdetail');
+    },
+  },
   };
+  
   </script>
   
   <style>
@@ -124,7 +134,7 @@
     }
     .user_info2 {
       width: 34%;
-      height: 300px;
+      min-height: 300px;
       border: 1px solid #c2c2c2;
       border-radius: 10px;
       display: flex;
