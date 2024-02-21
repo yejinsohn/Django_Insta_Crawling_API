@@ -1,5 +1,6 @@
 from .login_insta_admin import *
 from .searching_insta_account import *
+from .get_insta_profile_image import *
 from .get_insta_authentication import *
 from .get_insta_posts import *
 from .get_insta_followers import *

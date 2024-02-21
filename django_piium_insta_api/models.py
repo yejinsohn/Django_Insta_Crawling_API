@@ -3,6 +3,7 @@ from django.db import models
 # 데이터베이스의 테이블. 사용자의 정보를 담을 수 있는 필드 선언.
 # Create your models here.
 class Profile(models.Model):
+    profile_image = models.ImageField(default='default_profile_img.jpg') # 인스타 프로필 사진
     name = models.TextField(null=True) # 인스타 계정명
     posts = models.IntegerField(null=True) # 인스타 게시물 수
     followers = models.IntegerField(null=True) # 인스타 팔로워 수

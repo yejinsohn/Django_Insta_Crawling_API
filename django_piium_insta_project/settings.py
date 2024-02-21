@@ -77,6 +77,16 @@ WSGI_APPLICATION = 'django_piium_insta_project.wsgi.application'
 DATABASES = DATABASES
 
 
+# 이미지를 저장하기 위한 경로 설정
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_URL = '/crawling_images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'crawling_images')
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
