@@ -2,35 +2,35 @@
     <div class="content_analysis" :propsdata="userList">
       <div class="user_info1">
         <v-row style="text-align: center">
-          <v-col v-for="(data, index) in propsdata" :key="index" cols="1" md="2" lg="2">
-            <h2>@{{ data.name }}</h2>
+          <v-col cols="1" md="2" lg="2">
+            <h2>@{{ propsdata.name }}</h2>
           </v-col>
-          <v-col v-for="(data, index) in propsdata" :key="index" cols="1" md="2" lg="2">
-            <h2>{{ data.followers }}</h2>
+          <v-col cols="1" md="2" lg="2">
+            <h2>{{ propsdata.followers }}</h2>
             <a>팔로워</a>
           </v-col>
-          <v-col v-for="(data, index) in propsdata" :key="index" cols="1" md="2" lg="2">
-            <h2>{{ data.following }}</h2>
+          <v-col cols="1" md="2" lg="2">
+            <h2>{{ propsdata.following }}</h2>
             <a>팔로잉</a>
           </v-col>
-          <v-col v-for="(data, index) in propsdata" :key="index" cols="1" md="2" lg="2">
-            <h2>{{ data.posts }}</h2>
+          <v-col cols="1" md="2" lg="2">
+            <h2>{{ propsdata.posts }}</h2>
             <a>게시글</a>
           </v-col>
         </v-row>
       </div>
       <div class="user_info2">
         <v-row style="line-height: 70px">
-          <v-col v-for="(data, index) in propsdata" :key="index" cols="12">
-            <h3>소개 : {{ data.introduction }}</h3>
-            <h3>스레드: {{ data.threads }}</h3>
-            <h3>계정 인증: {{ data.authentication }}</h3>
+          <v-col cols="12">
+            <h3>소개 : {{ propsdata.introduction }}</h3>
+            <h3>스레드: {{ propsdata.threads }}</h3>
+            <h3>계정 인증: {{ propsdata.authentication }}</h3>
           </v-col>
         </v-row>
       </div>        
       <div class="user_info2">
         <v-row style="line-height: 70px">
-          <v-col v-for="(data, index) in propsdata" :key="index" cols="12">
+          <v-col cols="12">
             <h3>평균 좋아요 수:</h3>
             <h3>평균 댓글 수:</h3>
           </v-col>

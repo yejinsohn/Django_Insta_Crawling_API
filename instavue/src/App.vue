@@ -28,7 +28,7 @@ import Footer from './components/Footer.vue';
 import axios from 'axios';
 
 
-let url = 'http://localhost:8000/Profile/'
+let url = 'http://localhost:8000/'
 
 export default {
   data: () => {
@@ -42,24 +42,22 @@ export default {
     'insta-content': Content,
     'insta-footer': Footer,
   },
-  mounted() {
-    axios({
-      method: "GET",
-      url: url
-    })
-    .then(response => {
-      this.userList = response.data;
-      console.log(response);
-      this.$router.push({ name: 'analysis', params: { userList: this.userList } });
-    })
-    .catch(response => {
-      console.log("Failed", response);
-    });
-  },
   methods: {
     navigateToAnalysisPage() {
       if (this.username.trim() !== '') {
         // username에 입력된 값이 있는 경우에만 분석 페이지로 이동
+        axios({
+          method: "GET",
+          url: url + `crawling_method/?input_data=${this.username}`
+        })
+        .then(response => {
+          this.userList = response.data;
+          console.log(response);
+          this.$router.push({ name: 'analysis', params: { userList: this.userList } });
+        })
+        .catch(response => {
+          console.log("Failed", response);
+        });
         this.$router.push('/analysis');
         alert('Instagram 사용자 : ' + this.username);
       } else {
