@@ -4,7 +4,9 @@
     <div id="body-wrapper">
       <div id="body-content">
         <div id="user_search">
-          <h3>Instagram 사용자 :</h3> <input class="input-box" type="text" name="username" placeholder="사용자 이름을 입력하세요.">
+          <form>
+            <h3>Instagram 사용자 :</h3><input class="input-box" type="text" v-model="username" placeholder="사용자 이름을 입력하세요.">
+          </form>
           <button type="submit" class="btn" @click="navigateToAnalysisPage">분석</button>
         </div>
         <div class="guide" v-if="$route.path === '/'">
@@ -18,6 +20,7 @@
   </div>
 </template>
 
+
 <script>
 import Header from './components/Header.vue';
 import Content from './AnalysisPage.vue'
@@ -30,7 +33,8 @@ let url = 'http://localhost:8000/Profile/'
 export default {
   data: () => {
     return {
-      userList: []
+      userList: [],
+      username: '',
     };
   },
   components: {
@@ -54,8 +58,14 @@ export default {
   },
   methods: {
     navigateToAnalysisPage() {
-      this.$router.push('/analysis');
-    },
+      if (this.username.trim() !== '') {
+        // username에 입력된 값이 있는 경우에만 분석 페이지로 이동
+        this.$router.push('/analysis');
+        alert('Instagram 사용자 : ' + this.username);
+      } else {
+        alert('검색할 사용자 이름을 입력하세요.');
+      }
+    }
   },
 };
 </script>
@@ -80,6 +90,10 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+form {
+  display: flex;
+  gap: 10px;
 }
 .input-box {
   width: 300px;
