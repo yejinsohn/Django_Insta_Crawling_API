@@ -8,9 +8,9 @@
           <button type="submit" class="btn" @click="navigateToAnalysisPage">분석</button>
         </div>
         <div class="guide" v-if="$route.path === '/'">
-          사이트 소개
+          사이트 소개 영역
         </div>
-        <router-view :userList="userList" />
+        <!-- <router-view :userList="userList" /> -->
         <insta-content v-if="$route.path === '/analysis'" v-bind:propsdata="userList"></insta-content>
       </div>
       <insta-footer></insta-footer>
