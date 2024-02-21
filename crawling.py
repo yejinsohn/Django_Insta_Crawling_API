@@ -20,8 +20,9 @@ def insta_crawling(username):
     django.setup()
 
     # 관리자 인스타그램 아이디, 패스워드
-    administratorID = 'inteonsib412@gmail.com'
-    administratorPW = 'dlsxjstlq1234!!'
+   # 관리자 인스타그램 아이디, 패스워드
+    administratorID = "sonyejin2449@gmail.com"
+    administratorPW = "piium123"
 
     # 인스타그램 URL 변수
     instagramURL = 'https://www.instagram.com/'

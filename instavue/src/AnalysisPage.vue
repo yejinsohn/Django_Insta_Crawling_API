@@ -9,11 +9,11 @@
             <h2>@{{ propsdata.name }}</h2>
           </v-col>
           <v-col cols="1" md="2" lg="2">
-            <h2>{{ propsdata.followers }}</h2>
+            <h2>{{ propsdata.followers.toLocaleString() }}</h2>
             <a>팔로워</a>
           </v-col>
           <v-col cols="1" md="2" lg="2">
-            <h2>{{ propsdata.following }}</h2>
+            <h2>{{ propsdata.following.toLocaleString() }}</h2>
             <a>팔로잉</a>
           </v-col>
           <v-col cols="1" md="2" lg="2">
@@ -46,9 +46,10 @@
       </div> 
       <div class="post">
         <v-container style="display: flex; gap: 20px;">
-        <v-card v-for="(post, index) in propsdata.post" :key="index" style="width: 30%" height="300" @click="navigateToPostPage">
+        <v-card v-for="(post, index) in propsdata.post" :key="index" style="height: 300px;width: 30%;padding: 30px 0px;">
           <v-card-subtitle>좋아요: {{ post.like.toLocaleString() }}개</v-card-subtitle>
           <v-card-subtitle>작성일: {{ formatWithDayOfWeek(post.date) }}</v-card-subtitle>
+          <v-card-text>{{ post.content }}</v-card-text>
         </v-card>
       </v-container>
       </div>
@@ -57,9 +58,10 @@
       </div> 
       <div class="post">
         <v-container style="display: flex; gap: 20px;">
-          <v-card v-for="(reels, index) in propsdata.reels" :key="index" style="width: 30%" height="300" @click="navigateToReelsPage">
+          <v-card v-for="(reels, index) in propsdata.reels" :key="index" style="height: 300px;width: 30%;padding: 30px 0px;">
           <v-card-subtitle>좋아요: {{ reels.reels_like.toLocaleString() }}개</v-card-subtitle>
           <v-card-subtitle>누적 조회수: {{ reels.reels_view.toLocaleString() }}회</v-card-subtitle>
+          <v-card-text>{{ reels.reels_caption }}</v-card-text>
         </v-card>
         </v-container>
       </div>
@@ -73,12 +75,12 @@
   export default {
     props: ["propsdata"],
     methods: {
-    navigateToPostPage() {
-      this.$router.push('/postdetail');
-    },
-    navigateToReelsPage() {
-      this.$router.push('/reelsdetail');
-    },
+    // navigateToPostPage() {
+    //   this.$router.push('/postdetail');
+    // },
+    // navigateToReelsPage() {
+    //   this.$router.push('/reelsdetail');
+    // },
     calculateAverageLikes(posts) {
       if (posts.length === 0) return 0;
 

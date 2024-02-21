@@ -16,8 +16,8 @@ User
         </div>
         <!-- <router-view :userList="userList" /> -->
         <insta-content v-if="!loading && $route.path === '/analysis'" v-bind:propsdata="userList"></insta-content>
-        <post-content v-if="$route.path === '/postdetail'"></post-content>
-        <reels-content v-if="$route.path === '/reelsdetail'"></reels-content>
+        <!-- <post-content v-if="$route.path === '/postdetail'"></post-content>
+        <reels-content v-if="$route.path === '/reelsdetail'"></reels-content> -->
       </div>
       <insta-footer></insta-footer>
     </div>
@@ -28,8 +28,8 @@ User
 <script>
 import Header from './components/Header.vue';
 import Content from './AnalysisPage.vue'
-import Post from './detailPage/PostDetail.vue'
-import Reels from './detailPage/ReelsDetail.vue'
+// import Post from './detailPage/PostDetail.vue'
+// import Reels from './detailPage/ReelsDetail.vue'
 import Footer from './components/Footer.vue';
 import axios from 'axios';
 
@@ -47,8 +47,8 @@ export default {
     'insta-header': Header,
     'insta-content': Content,
     'insta-footer': Footer,
-    'post-content': Post,
-    'reels-content': Reels,
+    // 'post-content': Post,
+    // 'reels-content': Reels,
   },
   methods: {
     navigateToAnalysisPage() {

@@ -5,8 +5,8 @@ import { loadFonts } from './plugins/webfontloader'
 
 import { createRouter, createWebHistory } from 'vue-router'; // 수정된 부분
 import AnalysisPage from './AnalysisPage.vue'
-import PostPage from './detailPage/PostDetail.vue'
-import ReelsPage from './detailPage/ReelsDetail.vue'
+// import PostPage from './detailPage/PostDetail.vue'
+// import ReelsPage from './detailPage/ReelsDetail.vue'
 
 loadFonts()
 
@@ -16,13 +16,14 @@ const routes = [
   },{
     path:'/analysis',
     component: AnalysisPage,
-  },{
-    path:'/postdetail',
-    component: PostPage,
-  },{
-    path:'/reelsdetail',
-    component: ReelsPage,
   }
+  // ,{
+  //   path:'/postdetail',
+  //   component: PostPage,
+  // },{
+  //   path:'/reelsdetail',
+  //   component: ReelsPage,
+  // }
 ];
 
 const router = createRouter({
