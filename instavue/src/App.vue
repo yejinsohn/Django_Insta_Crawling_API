@@ -8,9 +8,10 @@
           <button type="submit" class="btn" @click="navigateToAnalysisPage">분석</button>
         </div>
         <div class="guide" v-if="$route.path === '/'">
-          인스타그램 사용자를 입력해주세요.
+          사이트 소개
         </div>
         <router-view :userList="userList" />
+        <insta-content v-if="$route.path === '/analysis'" v-bind:propsdata="userList"></insta-content>
       </div>
       <insta-footer></insta-footer>
     </div>
@@ -19,12 +20,12 @@
 
 <script>
 import Header from './components/Header.vue';
+import Content from './AnalysisPage.vue'
 import Footer from './components/Footer.vue';
 import axios from 'axios';
 
 
-let url = 'http://localhost:8000/';
-const username = 'incheon_gov';
+let url = 'http://localhost:8000/Profile/'
 
 export default {
   data: () => {
@@ -34,12 +35,13 @@ export default {
   },
   components: {
     'insta-header': Header,
+    'insta-content': Content,
     'insta-footer': Footer,
   },
   mounted() {
     axios({
       method: "GET",
-      url: url + `crawling_method/?input_data=${username}`
+      url: url
     })
     .then(response => {
       this.userList = response.data;
@@ -47,28 +49,13 @@ export default {
       this.$router.push({ name: 'analysis', params: { userList: this.userList } });
     })
     .catch(response => {
-      console.log("Failed to GET Data", response);
+      console.log("Failed", response);
     });
   },
   methods: {
     navigateToAnalysisPage() {
       this.$router.push('/analysis');
     },
-    getUserList: function() {
-      axios({
-        method: "GET",
-        url: url + `crawling_method/?input_data=${username}`
-      }) 
-      .then(response => {
-        this.userList = response.data;
-        console.log(response);
-      })
-      .catch(response => {
-        console.log("Failed", response);
-      });
-    },
-    updateUserList: function() {},
-    deleteUserList: function() {}
   },
 };
 </script>
@@ -115,8 +102,8 @@ body {
 }
 .guide {
   height: 200px;
-  padding: 80px;
-  text-align: center;
+    text-align: center;
+    padding: 70px;
 }
 
 </style>
