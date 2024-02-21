@@ -1,3 +1,4 @@
+User
 <template>
   <div>
     <insta-header></insta-header>
@@ -9,11 +10,12 @@
           </form>
           <button type="submit" class="btn" @click="navigateToAnalysisPage">분석</button>
         </div>
+        <div v-if="loading" class="spinner"></div>
         <div class="guide" v-if="$route.path === '/'">
           사이트 소개 영역
         </div>
         <!-- <router-view :userList="userList" /> -->
-        <insta-content v-if="$route.path === '/analysis'" v-bind:propsdata="userList"></insta-content>
+        <insta-content v-if="!loading && $route.path === '/analysis'" v-bind:propsdata="userList"></insta-content>
       </div>
       <insta-footer></insta-footer>
     </div>
@@ -27,7 +29,6 @@ import Content from './AnalysisPage.vue'
 import Footer from './components/Footer.vue';
 import axios from 'axios';
 
-
 let url = 'http://localhost:8000/'
 
 export default {
@@ -35,6 +36,7 @@ export default {
     return {
       userList: [],
       username: '',
+      loading: false,
     };
   },
   components: {
@@ -46,6 +48,8 @@ export default {
     navigateToAnalysisPage() {
       if (this.username.trim() !== '') {
         // username에 입력된 값이 있는 경우에만 분석 페이지로 이동
+        this.loading = true;
+
         axios({
           method: "GET",
           url: url + `crawling_method/?input_data=${this.username}`
@@ -53,13 +57,13 @@ export default {
         .then(response => {
           this.userList = response.data;
           console.log(response);
+          this.loading = false;
           this.$router.push({ name: 'analysis', params: { userList: this.userList } });
         })
         .catch(response => {
           console.log("Failed", response);
         });
         this.$router.push('/analysis');
-        alert('Instagram 사용자 : ' + this.username);
       } else {
         alert('검색할 사용자 이름을 입력하세요.');
       }
@@ -116,6 +120,20 @@ form {
   height: 200px;
     text-align: center;
     padding: 70px;
+}
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite;
+  margin: 50px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 </style>
