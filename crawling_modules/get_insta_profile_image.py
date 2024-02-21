@@ -14,7 +14,5 @@ def get_insta_profile_image(driver, username):
         img_name = username + "_profile_img.jpg"
         urllib.request.urlretrieve(img, img_path + img_name)
 
-        return img_path + img_name
-
     except Exception as e:
         print("오류 발생 get_insta_profile_image:", e)
