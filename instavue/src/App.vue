@@ -4,7 +4,7 @@ User
     <insta-header></insta-header>
     <div id="body-wrapper">
       <div id="body-content">
-        <div id="user_search"  v-if="$route.path === '/' || $route.path === '/analysis'">
+        <div id="user_search" v-if="$route.path === '/' || $route.path === '/analysis'">
           <form>
             <h3>Instagram 사용자 :</h3><input class="input-box" type="text" v-model="username" placeholder="사용자 이름을 입력하세요.">
           </form>
@@ -88,7 +88,7 @@ body {
 }
 #body-content {
     margin-top: 100px;
-    padding-bottom: 200px;
+    padding-bottom: 150px;
 }
 #user_search {
   display: flex;

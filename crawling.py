@@ -43,7 +43,7 @@ def insta_crawling(username):
 
     # 인스타 프로필의 정보를 갖고있는 딕셔너리
     profileDict = {
-        'profile_image': crawling_modules.get_insta_profile_image(driver, instagramAccount),
+        # 'profile_image': crawling_modules.get_insta_profile_image(driver, instagramAccount),
         'name': instagramAccount,
         'posts': crawling_modules.get_insta_posts(driver),
         'followers': crawling_modules.get_insta_followers(driver), 
