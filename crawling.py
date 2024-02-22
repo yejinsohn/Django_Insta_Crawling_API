@@ -20,8 +20,9 @@ def insta_crawling(username):
     django.setup()
 
     # 관리자 인스타그램 아이디, 패스워드
-    administratorID = 'inteonsib412@gmail.com'
-    administratorPW = 'dlsxjstlq1234!!'
+   # 관리자 인스타그램 아이디, 패스워드
+    administratorID = "sonyejin2449@gmail.com"
+    administratorPW = "piium123"
 
     # 인스타그램 URL 변수
     instagramURL = 'https://www.instagram.com/'
@@ -77,7 +78,7 @@ def insta_crawling(username):
     postList.append(postDict)
 
     # 원하는 게시물 수만큼 반복
-    for i in range(4):
+    for i in range(9):
         driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
         driver.implicitly_wait(10)
         postDict = {
@@ -104,7 +105,7 @@ def insta_crawling(username):
     driver.implicitly_wait(50)
 
     driver.implicitly_wait(10)
-    for i in range(5):
+    for i in range(10):
         reels_data = driver.find_elements(By.CSS_SELECTOR, 'div._aajy')
         driver.implicitly_wait(10)
         reelsDict = {

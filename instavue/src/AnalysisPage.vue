@@ -36,8 +36,8 @@
         <v-row style="line-height: 70px">
           <v-col cols="12">
             <h3>하이라이트 그룹: {{ propsdata.highlight_count }}</h3>
-            <h3>게시글 평균 좋아요 수: {{ calculateAverageLikes(propsdata.post).toLocaleString() }}개</h3>
-            <h3>릴스 평균 좋아요 수: {{ calculateAverageReelsLikes(propsdata.reels).toLocaleString() }}개</h3>
+            <h3>게시글 평균 좋아요 수: {{ calculateAverageLikes(propsdata.post) !== null ? calculateAverageLikes(propsdata.post).toLocaleString() : 'N/A' }}개</h3>
+            <h3>릴스 평균 좋아요 수: {{ calculateAverageReelsLikes(propsdata.reels) !== null ? calculateAverageReelsLikes(propsdata.reels).toLocaleString() : 'N/A' }}개</h3>
           </v-col>
         </v-row>
       </div>       
@@ -82,15 +82,16 @@
     //   this.$router.push('/reelsdetail');
     // },
     calculateAverageLikes(posts) {
-      if (posts.length === 0) return 0;
+      if (!posts || posts.length === 0) return 0;
 
-      const totalLikes = posts.reduce((sum, post) => sum + post.like, 0);
+      const totalLikes = posts.reduce((sum, post) => sum + (post.like || 0), 0);
       return totalLikes / posts.length;
     },
-    calculateAverageReelsLikes(reels) {
-      if (reels.length === 0) return 0;
 
-      const totalLikes = reels.reduce((sum, reel) => sum + reel.reels_like, 0);
+    calculateAverageReelsLikes(reels) {
+      if (!reels || reels.length === 0) return 0;
+
+      const totalLikes = reels.reduce((sum, reel) => sum + (reel.reels_like || 0), 0);
       return totalLikes / reels.length;
     },
     formatWithDayOfWeek(date) {
