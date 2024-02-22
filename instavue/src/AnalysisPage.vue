@@ -6,7 +6,7 @@
           <h2>@{{ propsdata.name }}</h2>
         </v-col>
         <v-col cols="1" md="2" lg="2">
-          <h2>{{ propsdata.followers.toLocaleString() }}</h2>
+          <h2>{{ formatNumber(propsdata.followers) }}</h2>
           <a>팔로워</a>
         </v-col>
         <v-col cols="1" md="2" lg="2">
@@ -186,6 +186,17 @@ export default {
   // navigateToReelsPage() {
   //   this.$router.push('/reelsdetail');
   // },
+   //팔로워 단위
+    formatNumber(number) {
+      if (number >= 1000000) {
+        const formattedNumber = (number / 1000000).toFixed(2).replace(/\.0$/, '');
+        return `${formattedNumber}M`;
+      } else if (number >= 1000) {
+        const formattedNumber = (number / 1000).toFixed(1).replace(/\.0$/, '');
+        return `${formattedNumber}K`;
+      }
+      return number.toLocaleString();
+    },
   calculateAverageLikes(posts) {
     if (!posts || posts.length === 0) return 0;
 
