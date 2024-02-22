@@ -5,15 +5,15 @@ from django.db import models
 class Profile(models.Model):
     profile_image = models.ImageField(default='default_profile_img.jpg') # 인스타 프로필 사진
     name = models.TextField(null=True) # 인스타 계정명
-    posts = models.IntegerField(null=True) # 인스타 게시물 수
-    followers = models.IntegerField(null=True) # 인스타 팔로워 수
-    following = models.IntegerField(null=True) # 인스타 팔로잉 수
+    posts = models.IntegerField(null=True, default=0) # 인스타 게시물 수
+    followers = models.IntegerField(null=True, default=0) # 인스타 팔로워 수
+    following = models.IntegerField(null=True, default=0) # 인스타 팔로잉 수
     threads = models.TextField(null=True, blank=True) # 인스타 스레드 계정
     authentication = models.TextField(null=True, blank=True) # 인스타 인증 마크
     introduction = models.TextField(null=True, blank=True) # 인스타 소개 글
     tag_id = models.TextField(null=True, blank=True) # 인스타 소개 사용자 태그
-    tag_length = models.IntegerField(null=True, blank=True) # 인스타 소개 사용자 태그 수
-    highlight_count = models.IntegerField(null=True, blank=True) # 인스타 하이라이트 그룹 개수
+    tag_length = models.IntegerField(null=True, blank=True, default=0) # 인스타 소개 사용자 태그 수
+    highlight_count = models.IntegerField(null=True, blank=True, default=0) # 인스타 하이라이트 그룹 개수
 
 class Post(models.Model):
     profile = models.ForeignKey(Profile, related_name='post', null=True, on_delete=models.CASCADE)
