@@ -99,7 +99,21 @@
         </v-container>
       </div>
       <div class="analysis">
-        <span>해시태그 분석</span>
+        <div>
+          <span>해시태그 분석</span>
+        </div>
+        <div>
+          <v-card style=" ">
+            <v-card-title>가장 많이 사용한 해시태그</v-card-title>
+            <v-card-text v-for="(tags, index) in sortedTags" :key="index" class="scrollable-text">
+              {{ index + 1 }}위. {{ tags[0] }}
+            </v-card-text>
+          </v-card>
+
+          <!-- <v-card style="height: 300px;">
+            <v-card-title >참여도가 가장 높은 해시태그</v-card-title>
+          </v-card> -->
+        </div>
       </div> 
     </div>
   </template>
@@ -113,6 +127,33 @@
     },
     sortedReels() {
       return [...this.propsdata.reels].sort((a, b) => b.reels_like - a.reels_like);
+    },
+    sortedTags() {
+      // 해시태그를 불러와서 배열에 하나씩 삽입.
+      let tagList = [];
+      for (let i = 0; i < this.propsdata.post.length; i++) {
+        if (this.propsdata.post[i].tags.length > 0) {
+          var words = this.propsdata.post[i].tags.split('\n');
+          for (let j = 0; j < words.length; j++) {
+            tagList.push(words[j])
+          }
+        }
+      }
+      
+      // 해시태그를 담고있는 배열의 원소를 key값, 해당 key값이 얼마나 있는지 카운트값을 value값으로 딕셔너리 생성.
+      let counts = {};
+      for (let i = 0; i < tagList.length; i++) {
+        if (tagList[i] in counts) {
+          counts[tagList[i]]++;
+        }
+        else {
+          counts[tagList[i]] = 0;
+        }
+      }
+
+      // value값을 기준으로 내림차순 정렬.
+      let sortedKeys = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      return sortedKeys;
     },
   },
     methods: {
