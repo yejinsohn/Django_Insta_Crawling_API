@@ -23,7 +23,7 @@
         </v-row>
       </div>
       <div class="user_info2">
-        <v-row style="line-height: 70px">
+        <v-row style="line-height: 50px">
           <v-col cols="12">
             <h3>소개 : {{ propsdata.introduction }}</h3>
             <h3>태그 아이디 : {{ propsdata.tag_id }}</h3>
@@ -35,7 +35,7 @@
       <div class="user_info2">
         <v-row style="line-height: 70px">
           <v-col cols="12">
-            <h3>하이라이트 그룹: {{ propsdata.highlight_count }}</h3>
+            <h3>하이라이트 그룹: {{ propsdata.highlight_count }}개</h3>
             <h3>게시글 평균 좋아요 수: {{ calculateAverageLikes(propsdata.post) !== null ? calculateAverageLikes(propsdata.post).toLocaleString() : 'N/A' }}개</h3>
             <h3>릴스 평균 좋아요 수: {{ calculateAverageReelsLikes(propsdata.reels) !== null ? calculateAverageReelsLikes(propsdata.reels).toLocaleString() : 'N/A' }}개</h3>
           </v-col>
@@ -46,10 +46,10 @@
       </div> 
       <div class="post">
         <v-container style="display: flex; gap: 20px;">
-          <v-card v-for="(post, index) in sortedPosts.slice(0, 5)" :key="index" style="height: 300px;width: 30%;padding: 30px 0px;">
+          <v-card v-for="(post, index) in sortedPosts.slice(0, 5)" :key="index" style="height: 300px; width: 30%;">
+            <v-card-text class="scrollable-text">{{ post.content }}</v-card-text>
             <v-card-subtitle>좋아요: {{ post.like.toLocaleString() }}개</v-card-subtitle>
             <v-card-subtitle>작성일: {{ formatWithDayOfWeek(post.date) }}</v-card-subtitle>
-            <v-card-text>{{ post.content }}</v-card-text>
           </v-card>
         </v-container>
       </div>
@@ -58,10 +58,10 @@
       </div> 
       <div class="reels">
     <v-container style="display: flex; gap: 20px;">
-      <v-card v-for="(reels, index) in sortedReels.slice(0, 5)" :key="index" style="height: 300px;width: 30%;padding: 30px 0px;">
+      <v-card v-for="(reels, index) in sortedReels.slice(0, 5)" :key="index" style="height: 300px; width: 30%;">
+        <v-card-text class="scrollable-text">{{ reels.reels_caption }}</v-card-text>
         <v-card-subtitle>좋아요: {{ reels.reels_like.toLocaleString() }}개</v-card-subtitle>
         <v-card-subtitle>누적 조회수: {{ reels.reels_view.toLocaleString() }}회</v-card-subtitle>
-        <v-card-text>{{ reels.reels_caption }}</v-card-text>
       </v-card>
     </v-container>
   </div>
@@ -170,5 +170,9 @@
       padding: 40px;
       box-sizing: border-box;
       overflow: hidden;
+    }
+    .scrollable-text {
+      height: 230px;
+      overflow-y: auto;
     }
   </style>
