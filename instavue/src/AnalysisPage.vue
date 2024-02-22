@@ -103,23 +103,30 @@
         </v-card>
       </v-container>
     </div>
-    <div class="analysis">
-      <div>
-        <span>해시태그 분석</span>
-      </div>
-      <div>
-        <v-card style=" ">
-          <v-card-title>가장 많이 사용한 해시태그</v-card-title>
-          <v-card-text v-for="(tags, index) in sortedTags" :key="index" class="scrollable-text">
-            {{ index + 1 }}위. {{ tags[0] }}
-          </v-card-text>
-        </v-card>
+    <div class="analysis hashtagAnalysis">
+        <div style="width: 100%;">
+          <h4>해시태그 분석</h4>
+        </div>
+        <div class="hashtag">
+          <h5 style="padding-bottom: 30px;">
+            가장 많이 사용한 해시태그
+          </h5>
 
-        <!-- <v-card style="height: 300px;">
-          <v-card-title >참여도가 가장 높은 해시태그</v-card-title>
-        </v-card> -->
+          <p v-for="(tags, index) in sortedTags" :key="index">
+            {{ Number(index) + 1 }}위. {{ tags[0] }}
+          </p>
+
+          <!-- <v-card style="display: inline-block;">
+            <v-card-title>가장 많이 사용한 해시태그</v-card-title>
+            <v-card-text v-for="(tags, index) in sortedTags" :key="index" class="scrollable-text">
+            </v-card-text>
+          </v-card> -->
+
+          <!-- <v-card style="height: 300px;">
+            <v-card-title >참여도가 가장 높은 해시태그</v-card-title>
+          </v-card> -->
+        </div>
       </div>
-    </div> 
   </div>
 </template>
 
@@ -136,37 +143,42 @@ export default {
     return [...this.propsdata.reels].sort((a, b) => b.reels_like - a.reels_like);
   },
   sortedTags() {
-    if (!this.propsdata.post || this.propsdata.post.length === 0) {
-        return [];
-    }
-
-    // 해시태그를 불러와서 배열에 하나씩 삽입.
-    let tagList = [];
-    for (let i = 0; i < this.propsdata.post.length; i++) {
-        // tags 속성이 있는지 확인
-        if (this.propsdata.post[i].tags && this.propsdata.post[i].tags.length > 0) {
-            var words = this.propsdata.post[i].tags.split('\n');
-            for (let j = 0; j < words.length; j++) {
-                tagList.push(words[j])
-            }
+      // 해시태그를 불러와서 배열에 하나씩 삽입.
+      let tagList = [];
+      for (let i = 0; i < this.propsdata.post.length; i++) {
+        if (this.propsdata.post[i].tags.length > 0) {
+          var words = this.propsdata.post[i].tags.split('\n');
+          for (let j = 0; j < words.length; j++) {
+            tagList.push(words[j])
+          }
         }
-    }
-
-    // 해시태그를 담고있는 배열의 원소를 key값, 해당 key값이 얼마나 있는지 카운트값을 value값으로 딕셔너리 생성.
-    let counts = {};
-    for (let i = 0; i < tagList.length; i++) {
+      }
+      
+      // 해시태그를 담고있는 배열의 원소를 key값, 해당 key값이 얼마나 있는지 카운트값을 value값으로 딕셔너리 생성.
+      let counts = {};
+      for (let i = 0; i < tagList.length; i++) {
         if (tagList[i] in counts) {
-            counts[tagList[i]]++;
-        } else {
-            counts[tagList[i]] = 0;
+          counts[tagList[i]]++;
         }
-    }
+        else {
+          counts[tagList[i]] = 0;
+        }
+      }
 
-    // value값을 기준으로 내림차순 정렬.
-    let sortedKeys = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-    return sortedKeys;
-},
-},
+      // value값을 기준으로 내림차순 정렬.
+      let sortedKeys = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      if (sortedKeys.length > 10) {
+        const slicedDictionary = Object.fromEntries(
+          Object.entries(sortedKeys).slice(0, 10)
+        );
+        console.log(slicedDictionary);
+        return slicedDictionary;
+      }
+      else {
+        return sortedKeys;
+      }
+    },
+  },
   methods: {
   // navigateToPostPage() {
   //   this.$router.push('/postdetail');
@@ -366,6 +378,16 @@ calculateAverageReelsGap(reels) {
     box-sizing: border-box;
     overflow: hidden;
   }
+  .analysis.hashtagAnalysis {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .hashtag {
+      display: flex;
+      flex-direction: column; 
+      align-items: center;
+      width: 100%;
+    }
   .scrollable-text {
     height: 230px;
     overflow-y: auto;
