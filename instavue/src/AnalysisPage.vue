@@ -46,25 +46,25 @@
       </div> 
       <div class="post">
         <v-container style="display: flex; gap: 20px;">
-        <v-card v-for="(post, index) in propsdata.post" :key="index" style="height: 300px;width: 30%;padding: 30px 0px;">
-          <v-card-subtitle>좋아요: {{ post.like.toLocaleString() }}개</v-card-subtitle>
-          <v-card-subtitle>작성일: {{ formatWithDayOfWeek(post.date) }}</v-card-subtitle>
-          <v-card-text>{{ post.content }}</v-card-text>
-        </v-card>
-      </v-container>
+          <v-card v-for="(post, index) in sortedPosts.slice(0, 5)" :key="index" style="height: 300px;width: 30%;padding: 30px 0px;">
+            <v-card-subtitle>좋아요: {{ post.like.toLocaleString() }}개</v-card-subtitle>
+            <v-card-subtitle>작성일: {{ formatWithDayOfWeek(post.date) }}</v-card-subtitle>
+            <v-card-text>{{ post.content }}</v-card-text>
+          </v-card>
+        </v-container>
       </div>
       <div class="analysis">
         <span>릴스 분석</span>
       </div> 
-      <div class="post">
-        <v-container style="display: flex; gap: 20px;">
-          <v-card v-for="(reels, index) in propsdata.reels" :key="index" style="height: 300px;width: 30%;padding: 30px 0px;">
-          <v-card-subtitle>좋아요: {{ reels.reels_like.toLocaleString() }}개</v-card-subtitle>
-          <v-card-subtitle>누적 조회수: {{ reels.reels_view.toLocaleString() }}회</v-card-subtitle>
-          <v-card-text>{{ reels.reels_caption }}</v-card-text>
-        </v-card>
-        </v-container>
-      </div>
+      <div class="reels">
+    <v-container style="display: flex; gap: 20px;">
+      <v-card v-for="(reels, index) in sortedReels.slice(0, 5)" :key="index" style="height: 300px;width: 30%;padding: 30px 0px;">
+        <v-card-subtitle>좋아요: {{ reels.reels_like.toLocaleString() }}개</v-card-subtitle>
+        <v-card-subtitle>누적 조회수: {{ reels.reels_view.toLocaleString() }}회</v-card-subtitle>
+        <v-card-text>{{ reels.reels_caption }}</v-card-text>
+      </v-card>
+    </v-container>
+  </div>
       <div class="analysis">
         <span>해시태그 분석</span>
       </div> 
@@ -74,6 +74,14 @@
   <script>
   export default {
     props: ["propsdata"],
+    computed: {
+    sortedPosts() {
+      return [...this.propsdata.post].sort((a, b) => b.like - a.like);
+    },
+    sortedReels() {
+      return [...this.propsdata.reels].sort((a, b) => b.reels_like - a.reels_like);
+    },
+  },
     methods: {
     // navigateToPostPage() {
     //   this.$router.push('/postdetail');
@@ -148,6 +156,9 @@
     gap : 50px;
     }
     .post {
+      width: 70%;
+    }
+    .reels {
       width: 70%;
     }
     .analysis {
