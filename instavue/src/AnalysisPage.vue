@@ -109,13 +109,13 @@
         <h4>해시태그 분석</h4>
       </div>
       <div class="hashtag">
-        <h5 style="padding-bottom: 30px;">
-          가장 많이 사용한 해시태그
-        </h5>  
-        <p v-for="(tags, index) in sortedTags" :key="index">
-          {{ Number(index) + 1 }}위. {{ tags[0] }}
-        </p>
+        <h5 style="padding-bottom: 20px; font-size: medium;">가장 많이 사용한 해시태그</h5>  
+        <div class="tag">
+        <div v-for="(tags, index) in sortedTags" :key="index" style="min-width: 15%; box-sizing: border-box; padding: 5px;">
+          {{ Number(index) + 1 }}위. <span style="color: rgb(63, 114, 155);">{{ tags[0] }}</span>
+        </div>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -407,9 +407,15 @@ calculateAverageReelsGap(reels) {
   }
   .hashtag {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
-    width: 100%;
+  }
+  .tag {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 80%;
+    gap: 10px;
   }
   .scrollable-text {
     height: 230px;
