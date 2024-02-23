@@ -103,10 +103,9 @@ def insta_crawling(username):
     driver.get(crawling_modules.searching_insta_account.generate_account_URL(instagramURL, instagramAccount) + '/reels/')
     driver.implicitly_wait(50)
 
+    reels_data = driver.find_elements(By.CSS_SELECTOR, 'div._aajy')
     driver.implicitly_wait(10)
     for i in range(5):
-        reels_data = driver.find_elements(By.CSS_SELECTOR, 'div._aajy')
-        driver.implicitly_wait(10)
         reelsDict = {
             'reels_view': crawling_modules.get_reels_view(driver, reels_data[i]),
             'reels_like': crawling_modules.get_reels_like(driver, reels_data[i]),

@@ -10,7 +10,8 @@
           <a>팔로워</a>
         </v-col>
         <v-col cols="1" md="2" lg="2">
-          <h2>{{ propsdata.following.toLocaleString() }}</h2>
+          <h2 v-if="propsdata.following">{{ propsdata.following.toLocaleString() }}</h2>
+          <h2 v-else>0</h2>
           <a>팔로잉</a>
         </v-col>
         <v-col cols="1" md="2" lg="2">
@@ -22,10 +23,10 @@
     <div class="user_info2">
       <v-row style="line-height: 50px">
         <v-col cols="12">
-          <h3>소개 : {{ propsdata.introduction }}</h3>
-          <h3>태그 아이디 : {{ propsdata.tag_id }}</h3>
-          <h3>스레드: {{ propsdata.threads }}</h3>
-          <h3>계정 인증: {{ propsdata.authentication }}</h3>
+          <h3 v-if="propsdata.introduction">소개 : {{ propsdata.introduction }}</h3>
+          <h3 v-if="propsdata.tag_id">태그 아이디 : {{ propsdata.tag_id }}</h3>
+          <h3 v-if="propsdata.threads">스레드: {{ propsdata.threads }}</h3>
+          <h3 v-if="propsdata.authentication">계정 인증: {{ propsdata.authentication }}</h3>
         </v-col>
       </v-row>
     </div>        
@@ -73,7 +74,7 @@
     <div class="analysis">
       <h4>릴스 분석</h4> 
       <div class="reels-analysis">
-          <div class="reels-day">
+        <div class="reels-day">
           <h5 style="padding-top: 30px;">릴스 업로드가 가장 활발한 요일</h5>
           <div class="mostday">
             {{ findMostActiveDaysReels(calculateDayOfWeekStatsReels(sortedReels.slice(0, 5))).join(', ') }}요일
@@ -83,15 +84,15 @@
               {{ day }}: {{ count }}개
             </div>
           </div>
-      </div>
-    <div class="posting-gap">
-      <h5 style="padding-top: 30px;">평균 릴스 업로드 간격</h5>
-      <div class="gap">
-        {{ calculateAverageReelsGap(sortedReels).toFixed(2) }}일
+        </div>
+        <div class="posting-gap">
+          <h5 style="padding-top: 30px;">평균 릴스 업로드 간격</h5>
+          <div class="gap">
+            {{ calculateAverageReelsGap(sortedReels).toFixed(2) }}일
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
     <div class="reels">
       <div style="padding: 0px 10px">📍 최근 릴스 10개 중 좋아요가 가장 많이 누적된 5개의 릴스 데이터입니다.</div>
       <v-container style="display: flex; gap: 20px;">
@@ -104,29 +105,18 @@
       </v-container>
     </div>
     <div class="analysis hashtagAnalysis">
-        <div style="width: 100%;">
-          <h4>해시태그 분석</h4>
-        </div>
-        <div class="hashtag">
-          <h5 style="padding-bottom: 30px;">
-            가장 많이 사용한 해시태그
-          </h5>
-
-          <p v-for="(tags, index) in sortedTags" :key="index">
-            {{ Number(index) + 1 }}위. {{ tags[0] }}
-          </p>
-
-          <!-- <v-card style="display: inline-block;">
-            <v-card-title>가장 많이 사용한 해시태그</v-card-title>
-            <v-card-text v-for="(tags, index) in sortedTags" :key="index" class="scrollable-text">
-            </v-card-text>
-          </v-card> -->
-
-          <!-- <v-card style="height: 300px;">
-            <v-card-title >참여도가 가장 높은 해시태그</v-card-title>
-          </v-card> -->
-        </div>
+      <div style="width: 100%;">
+        <h4>해시태그 분석</h4>
       </div>
+      <div class="hashtag">
+        <h5 style="padding-bottom: 30px;">
+          가장 많이 사용한 해시태그
+        </h5>  
+        <p v-for="(tags, index) in sortedTags" :key="index">
+          {{ Number(index) + 1 }}위. {{ tags[0] }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -143,7 +133,7 @@ export default {
     return [...this.propsdata.reels].sort((a, b) => b.reels_like - a.reels_like);
   },
   sortedTags() {
-      // 해시태그를 불러와서 배열에 하나씩 삽입.
+    // 해시태그를 불러와서 배열에 하나씩 삽입.
       let tagList = [];
       for (let i = 0; i < this.propsdata.post.length; i++) {
         if (this.propsdata.post[i].tags.length > 0) {
@@ -180,14 +170,14 @@ export default {
     },
   },
   methods: {
-  // navigateToPostPage() {
-  //   this.$router.push('/postdetail');
-  // },
-  // navigateToReelsPage() {
-  //   this.$router.push('/reelsdetail');
-  // },
-   //팔로워 단위
-    formatNumber(number) {
+    // navigateToPostPage() {
+      //   this.$router.push('/postdetail');
+      // },
+      // navigateToReelsPage() {
+        //   this.$router.push('/reelsdetail');
+        // },
+        //팔로워 단위
+        formatNumber(number) {
       if (number >= 1000000) {
         const formattedNumber = (number / 1000000).toFixed(2).replace(/\.0$/, '');
         return `${formattedNumber}M`;
@@ -210,7 +200,7 @@ export default {
     return totalLikes / reels.length;
   },
   formatWithDayOfWeek(date) {
-  const dateString = date.toString();
+    const dateString = date.toString();
 
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
   const formattedDate = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', options);
@@ -221,7 +211,7 @@ export default {
   return `${formattedDate} (${dayOfWeek})`;
 },
 calculateDayOfWeekStats(posts) {
-    const stats = { '일': 0, '월': 0, '화': 0, '수': 0, '목': 0, '금': 0, '토': 0 };
+  const stats = { '일': 0, '월': 0, '화': 0, '수': 0, '목': 0, '금': 0, '토': 0 };
 
     posts.forEach(post => {
       const dayOfWeek = this.getDayOfWeek(post.date);
@@ -231,13 +221,13 @@ calculateDayOfWeekStats(posts) {
     return stats;
   },
 
-getDayOfWeek(date) {
+  getDayOfWeek(date) {
   const dateString = date.toString();
   const dayOfWeekOptions = { weekday: 'short' };
   return new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', dayOfWeekOptions);
 },
 findMostActiveDays(stats) {
-let maxCount = 0;
+  let maxCount = 0;
 let mostActiveDays = [];
 
 for (const day in stats) {
@@ -283,7 +273,7 @@ reels.forEach(reel => {
 return stats;
 },
 findMostActiveDaysReels(stats) {
-let maxCount = 0;
+  let maxCount = 0;
 let mostActiveDays = [];
 
 for (const day in stats) {
@@ -353,12 +343,12 @@ calculateAverageReelsGap(reels) {
     overflow: hidden;
   }
   .v-row {
-  display: flex;
-  margin: -12px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap : 50px;
+    display: flex;
+    margin: -12px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap : 50px;
   }
   .post-analysis {
     display: flex;
@@ -398,15 +388,15 @@ calculateAverageReelsGap(reels) {
     overflow: hidden;
   }
   .analysis.hashtagAnalysis {
-      display: flex;
-      flex-wrap: wrap;
-    }
-    .hashtag {
-      display: flex;
-      flex-direction: column; 
-      align-items: center;
-      width: 100%;
-    }
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .hashtag {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    width: 100%;
+  }
   .scrollable-text {
     height: 230px;
     overflow-y: auto;
