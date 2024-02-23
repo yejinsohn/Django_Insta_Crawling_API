@@ -73,6 +73,7 @@ def insta_crawling(username):
         'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
         'location': crawling_modules.get_insta_location(driver),
         'content_type': crawling_modules.get_insta_content_type(driver),
+        'post_URL': crawling_modules.get_insta_post_URL(driver),
     }
     postList.append(postDict)
 
@@ -90,9 +91,11 @@ def insta_crawling(username):
             'comment_most_like': crawling_modules.get_insta_comment_most_like(driver),
             'location': crawling_modules.get_insta_location(driver),
             'content_type': crawling_modules.get_insta_content_type(driver),
+            'post_URL': crawling_modules.get_insta_post_URL(driver),
         }
         postList.append(postDict)
     profileDict['post'] = postList
+    print(postList)
 
     # 릴스의 정보를 갖고있는 딕셔너리를 담을 리스트
     reelsList = []

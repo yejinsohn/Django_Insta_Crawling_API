@@ -20,6 +20,7 @@ from .get_insta_tags_length import *
 from .get_insta_user_tags import *
 from .get_insta_comment_most_like import *
 from .get_insta_content_type import *
+from .get_insta_post_URL import *
 
 from .get_reels_view import *
 from .get_reels_comment_count import *

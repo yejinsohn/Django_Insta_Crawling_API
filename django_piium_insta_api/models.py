@@ -26,6 +26,7 @@ class Post(models.Model):
     comment_most_like = models.TextField(null=True, blank=True) # 인스타 게시물 댓글 내 좋아요를 많이 받은 댓글
     location = models.TextField(null=True, blank=True) # 인스타 게시물 위치
     content_type = models.TextField(null=True, blank=True) # 인스타 게시물 타입
+    post_URL = models.URLField(null=True, blank=True) # 인스타 게시물 링크
 
 class Reels(models.Model):
     profile = models.ForeignKey(Profile, related_name='reels', null=True, on_delete=models.CASCADE)
