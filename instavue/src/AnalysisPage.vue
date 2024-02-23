@@ -64,7 +64,7 @@
     <div class="post">
       <div style="padding: 0px 10px">📍 최근 게시물 10개 중 좋아요가 가장 많이 누적된 5개의 게시글 데이터입니다.</div>
       <v-container style="display: flex; gap: 20px;">
-        <v-card v-for="(post, index) in sortedPosts.slice(0, 5)" :key="index" style="height: 300px; width: 30%;">
+        <v-card v-for="(post, index) in sortedPosts.slice(0, 5)" :key="index" style="height: 300px; width: 30%;" @click="goPost(post)">
           <v-card-text class="scrollable-text">{{ post.content }}</v-card-text>
           <v-card-subtitle>좋아요: {{ post.like ? post.like.toLocaleString() : 'N/A' }}개</v-card-subtitle>
           <v-card-subtitle>작성일: {{ formatWithDayOfWeek(post.date) }}</v-card-subtitle>
@@ -111,11 +111,11 @@
       <div class="hashtag">
         <h5 style="padding-bottom: 20px; font-size: medium;">가장 많이 사용한 해시태그</h5>  
         <div class="tag">
-        <div v-for="(tags, index) in sortedTags" :key="index" style="min-width: 15%; box-sizing: border-box; padding: 5px;">
-          {{ Number(index) + 1 }}위. <span style="color: rgb(63, 114, 155);">{{ tags[0] }}</span>
+          <div v-for="(tags, index) in sortedTags" :key="index" style="min-width: 15%; box-sizing: border-box; padding: 5px;">
+            {{ Number(index) + 1 }}위. <span style="color: rgb(63, 114, 155);">{{ tags[0] }}</span>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
@@ -170,14 +170,8 @@ export default {
     },
   },
   methods: {
-    // navigateToPostPage() {
-      //   this.$router.push('/postdetail');
-      // },
-      // navigateToReelsPage() {
-        //   this.$router.push('/reelsdetail');
-        // },
-        //팔로워 단위
-        formatNumber(number) {
+    //팔로워 단위
+    formatNumber(number) {
       if (number >= 1000000) {
         const formattedNumber = (number / 1000000).toFixed(2).replace(/\.0$/, '');
         return `${formattedNumber}M`;
@@ -187,139 +181,144 @@ export default {
       }
       return number.toLocaleString();
     },
-  calculateAverageLikes(posts) {
-    if (!posts || posts.length === 0) return 0;
+    calculateAverageLikes(posts) {
+      if (!posts || posts.length === 0) return 0;
+      
+      const totalLikes = posts.reduce((sum, post) => sum + (post.like || 0), 0);
+      return totalLikes / posts.length;
+    },
+    calculateAverageReelsLikes(reels) {
+      if (!reels || reels.length === 0) return 0;
+      
+      const totalLikes = reels.reduce((sum, reel) => sum + (reel.reels_like || 0), 0);
+      return totalLikes / reels.length;
+    },
+    formatWithDayOfWeek(date) {
+      const dateString = date.toString();
+      
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      const formattedDate = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', options);
+      
+      const dayOfWeekOptions = { weekday: 'long' };
+      const dayOfWeek = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', dayOfWeekOptions);
+      
+      return `${formattedDate} (${dayOfWeek})`;
+    },
+    calculateDayOfWeekStats(posts) {
+      const stats = { '월요일': 0, '화요일': 0, '수요일': 0, '목요일': 0, '금요일': 0, '토요일': 0, '일요일': 0 };
+      
+      posts.forEach(post => {
+        const dayOfWeek = this.getDayOfWeek(post.date);
+        stats[dayOfWeek]++;
+      });
+      
+      return stats;
+    },
+    getDayOfWeek(date) {
+      if (!date) {
+        return 'N/A'; 
+      }
+      
+      const dateString = date.toString();
+      const dayOfWeekOptions = { weekday: 'long' };
+      const fullDayOfWeek = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', dayOfWeekOptions);
+      
+      return fullDayOfWeek;
+    },
+    findMostActiveDays(stats) {
+      let maxCount = 0;
+      let mostActiveDays = [];
+      
+      for (const day in stats) {
+        const count = stats[day];
+        
+        if (count > maxCount) {
+          maxCount = count;
+          mostActiveDays = [day];
+        } else if (count === maxCount) {
+          mostActiveDays.push(day);
+        }
+      }
+      
+      return mostActiveDays;
+    },
+    calculateAveragePostingGap(posts) {
+      if (!posts || posts.length < 2) {
+        return 0; 
+      }
+      
+      const sortedPosts = [...posts].sort((a, b) => a.date - b.date);
+      let totalGap = 0;
+      
+      for (let i = 1; i < sortedPosts.length; i++) {
+        const currentDate = moment(sortedPosts[i].date, 'YYYYMMDD'); 
+        const previousDate = moment(sortedPosts[i - 1].date, 'YYYYMMDD');  
+        
+        const gapInDays = currentDate.diff(previousDate, 'days');
+        totalGap += gapInDays;
+      }
+      
+      const averageGap = totalGap / (sortedPosts.length - 1);
+      return averageGap;
+    },
+    calculateDayOfWeekStatsReels(reels) {
+      const stats = { '월요일': 0, '화요일': 0, '수요일': 0, '목요일': 0, '금요일': 0, '토요일': 0, '일요일': 0 };
+      
+      reels.forEach(reel => {
+        const dayOfWeek = this.getDayOfWeek(reel.reels_date);
+        stats[dayOfWeek]++;
+      });
+      
+      return stats;
+    },
+    
+    findMostActiveDaysReels(stats) {
+      let maxCount = 0;
+      let mostActiveDays = [];
+      
+      if (Object.keys(stats).length === 0) {
+        return [];
+      }
+      
+      for (const day in stats) {
+        const count = stats[day];
+        
+        if (count > maxCount) {
+          maxCount = count;
+          mostActiveDays = [day];
+        } else if (count === maxCount) {
+          mostActiveDays.push(day);
+        }
+      }
+      
+      return mostActiveDays;
+    },
+    
+    calculateAverageReelsGap(reels) {
+      if (!reels || reels.length < 2) {
+        return 0; 
+      }
+      
+      const sortedReels = [...reels].sort((a, b) => a.reels_date - b.reels_date);
+      let totalGap = 0;
+      
+      for (let i = 1; i < sortedReels.length; i++) {
+        const currentDate = moment(sortedReels[i].reels_date, 'YYYYMMDD'); 
+        const previousDate = moment(sortedReels[i - 1].reels_date, 'YYYYMMDD');  
+        
+        const gapInDays = currentDate.diff(previousDate, 'days');
+        totalGap += gapInDays;
+      }
+      
+      const averageGap = totalGap / (sortedReels.length - 1);
+      return averageGap;
+    },
 
-    const totalLikes = posts.reduce((sum, post) => sum + (post.like || 0), 0);
-    return totalLikes / posts.length;
-  },
-  calculateAverageReelsLikes(reels) {
-    if (!reels || reels.length === 0) return 0;
-
-    const totalLikes = reels.reduce((sum, reel) => sum + (reel.reels_like || 0), 0);
-    return totalLikes / reels.length;
-  },
-  formatWithDayOfWeek(date) {
-    const dateString = date.toString();
-
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  const formattedDate = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', options);
-
-  const dayOfWeekOptions = { weekday: 'long' };
-  const dayOfWeek = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', dayOfWeekOptions);
-
-  return `${formattedDate} (${dayOfWeek})`;
-},
-calculateDayOfWeekStats(posts) {
-  const stats = { '월요일': 0, '화요일': 0, '수요일': 0, '목요일': 0, '금요일': 0, '토요일': 0, '일요일': 0 };
-
-  posts.forEach(post => {
-    const dayOfWeek = this.getDayOfWeek(post.date);
-    stats[dayOfWeek]++;
-  });
-
-  return stats;
-},
-getDayOfWeek(date) {
-  if (!date) {
-    return 'N/A'; 
-  }
-
-  const dateString = date.toString();
-  const dayOfWeekOptions = { weekday: 'long' };
-  const fullDayOfWeek = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', dayOfWeekOptions);
-
-  return fullDayOfWeek;
-},
-findMostActiveDays(stats) {
-  let maxCount = 0;
-let mostActiveDays = [];
-
-for (const day in stats) {
-  const count = stats[day];
-
-  if (count > maxCount) {
-    maxCount = count;
-    mostActiveDays = [day];
-  } else if (count === maxCount) {
-    mostActiveDays.push(day);
-  }
-}
-
-return mostActiveDays;
-},
-calculateAveragePostingGap(posts) {
-  if (!posts || posts.length < 2) {
-    return 0; 
-  }
-
-  const sortedPosts = [...posts].sort((a, b) => a.date - b.date);
-  let totalGap = 0;
-
-  for (let i = 1; i < sortedPosts.length; i++) {
-    const currentDate = moment(sortedPosts[i].date, 'YYYYMMDD'); 
-    const previousDate = moment(sortedPosts[i - 1].date, 'YYYYMMDD');  
-
-    const gapInDays = currentDate.diff(previousDate, 'days');
-    totalGap += gapInDays;
-  }
-
-  const averageGap = totalGap / (sortedPosts.length - 1);
-  return averageGap;
-},
-calculateDayOfWeekStatsReels(reels) {
-  const stats = { '월요일': 0, '화요일': 0, '수요일': 0, '목요일': 0, '금요일': 0, '토요일': 0, '일요일': 0 };
-
-  reels.forEach(reel => {
-    const dayOfWeek = this.getDayOfWeek(reel.reels_date);
-    stats[dayOfWeek]++;
-  });
-
-  return stats;
-},
-
-findMostActiveDaysReels(stats) {
-  let maxCount = 0;
-  let mostActiveDays = [];
-
-  if (Object.keys(stats).length === 0) {
-    return [];
-  }
-
-  for (const day in stats) {
-    const count = stats[day];
-
-    if (count > maxCount) {
-      maxCount = count;
-      mostActiveDays = [day];
-    } else if (count === maxCount) {
-      mostActiveDays.push(day);
+    // 게시물 클릭 시 해당 게시물로 들어가는 함수
+    goPost(post) {
+      console.log(post.post_URL);
     }
-  }
-
-  return mostActiveDays;
-},
-
-calculateAverageReelsGap(reels) {
-  if (!reels || reels.length < 2) {
-    return 0; 
-  }
-
-  const sortedReels = [...reels].sort((a, b) => a.reels_date - b.reels_date);
-  let totalGap = 0;
-
-  for (let i = 1; i < sortedReels.length; i++) {
-    const currentDate = moment(sortedReels[i].reels_date, 'YYYYMMDD'); 
-    const previousDate = moment(sortedReels[i - 1].reels_date, 'YYYYMMDD');  
-
-    const gapInDays = currentDate.diff(previousDate, 'days');
-    totalGap += gapInDays;
-  }
-
-  const averageGap = totalGap / (sortedReels.length - 1);
-  return averageGap;
-},
-},
+  },
 };
 </script>
 
