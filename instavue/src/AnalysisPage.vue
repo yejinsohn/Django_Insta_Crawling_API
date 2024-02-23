@@ -317,6 +317,7 @@ export default {
     // 게시물 클릭 시 해당 게시물로 들어가는 함수
     goPost(post) {
       console.log(post.post_URL);
+      window.open(post.post_URL, "_blank");
     }
   },
 };
