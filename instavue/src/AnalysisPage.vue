@@ -96,7 +96,7 @@
     <div class="reels">
       <div style="padding: 0px 10px">📍 최근 릴스 10개 중 좋아요가 가장 많이 누적된 5개의 릴스 데이터입니다.</div>
       <v-container style="display: flex; gap: 20px;">
-        <v-card v-for="(reels, index) in sortedReels.slice(0, 5)" :key="index" style="height: 300px; width: 30%;">
+        <v-card v-for="(reels, index) in sortedReels.slice(0, 5)" :key="index" style="height: 300px; width: 30%;" @click="goPost(reels)">
           <v-card-text class="scrollable-text">{{ reels.reels_caption }}</v-card-text>
           <v-card-subtitle>좋아요: {{ reels.reels_like ? reels.reels_like.toLocaleString() : 'N/A' }}개</v-card-subtitle>
           <v-card-subtitle>누적 조회수: {{ reels.reels_view.toLocaleString() }}회</v-card-subtitle>
@@ -316,7 +316,6 @@ export default {
 
     // 게시물 클릭 시 해당 게시물로 들어가는 함수
     goPost(post) {
-      console.log(post.post_URL);
       window.open(post.post_URL, "_blank");
     }
   },

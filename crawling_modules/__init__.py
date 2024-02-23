@@ -27,3 +27,4 @@ from .get_reels_comment_count import *
 from .get_reels_caption import *
 from .get_reels_like import *
 from .get_reels_date import *
+from .get_reels_post_URL import *

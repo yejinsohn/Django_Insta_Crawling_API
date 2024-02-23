@@ -95,7 +95,6 @@ def insta_crawling(username):
         }
         postList.append(postDict)
     profileDict['post'] = postList
-    print(postList)
 
     # 릴스의 정보를 갖고있는 딕셔너리를 담을 리스트
     reelsList = []
@@ -115,6 +114,7 @@ def insta_crawling(username):
             # 'reels_comment_count': crawling_modules.get_reels_comment_count(driver, reels_data[i]),
             'reels_caption': crawling_modules.get_reels_caption(driver, reels_data[i]),
             'reels_date': crawling_modules.get_reels_date(driver, reels_data[i]),
+            'post_URL': crawling_modules.get_reels_post_URL(driver, reels_data[i]),
         }
         reelsList.append(reelsDict)
     profileDict['reels'] = reelsList

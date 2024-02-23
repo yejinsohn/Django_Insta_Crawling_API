@@ -35,3 +35,4 @@ class Reels(models.Model):
     # reels_comment_count = models.TextField(null=True, blank=True)
     reels_caption = models.TextField(null=True, blank=True)
     reels_date = models.IntegerField(null=True)
+    post_URL = models.URLField(null=True, blank=True) # 인스타 릴스 링크
