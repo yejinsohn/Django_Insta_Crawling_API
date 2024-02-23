@@ -39,8 +39,8 @@
       </v-row>
     </div>       
     <div class="analysis">
+      <h4>게시글 분석</h4>
       <div class="post-analysis">
-        <h4>게시글 분석</h4> 
         <div class="posting-day">
           <h5 style="padding-top: 30px;">게시글 작성이 가장 활발한 요일</h5>
           <div class="mostday">
@@ -71,8 +71,8 @@
       </v-container>
     </div>
     <div class="analysis">
+      <h4>릴스 분석</h4> 
       <div class="reels-analysis">
-        <h4>릴스 분석</h4> 
           <div class="reels-day">
           <h5 style="padding-top: 30px;">릴스 업로드가 가장 활발한 요일</h5>
           <div class="mostday">
@@ -359,6 +359,14 @@ calculateAverageReelsGap(reels) {
   justify-content: center;
   align-items: center;
   gap : 50px;
+  }
+  .post-analysis {
+    display: flex;
+    padding: 15px;
+  }
+  .reels-analysis {
+    display: flex;
+    padding: 15px;
   }
   .post {
     width: 70%;
