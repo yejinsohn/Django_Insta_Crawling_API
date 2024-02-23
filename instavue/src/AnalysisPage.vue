@@ -45,7 +45,7 @@
         <div class="posting-day">
           <h5 style="padding-top: 30px;">게시글 작성이 가장 활발한 요일</h5>
           <div class="mostday">
-            {{ findMostActiveDays(calculateDayOfWeekStats(sortedPosts.slice(0, 5))).join(', ') }}요일
+            {{ findMostActiveDays(calculateDayOfWeekStats(sortedPosts.slice(0, 5))).join(', ') }}
           </div>
           <div class="day">
             <div v-for="(count, day) in calculateDayOfWeekStats(sortedPosts.slice(0, 5))" :key="day">
@@ -72,12 +72,12 @@
       </v-container>
     </div>
     <div class="analysis">
-      <h4>릴스 분석</h4> 
+      <p>릴스 분석</p> 
       <div class="reels-analysis">
         <div class="reels-day">
           <h5 style="padding-top: 30px;">릴스 업로드가 가장 활발한 요일</h5>
           <div class="mostday">
-            {{ findMostActiveDaysReels(calculateDayOfWeekStatsReels(sortedReels.slice(0, 5))).join(', ') }}요일
+            {{ findMostActiveDaysReels(calculateDayOfWeekStatsReels(sortedReels.slice(0, 5))).join(', ') }}
           </div>
           <div class="day">
             <div v-for="(count, day) in calculateDayOfWeekStatsReels(sortedReels.slice(0, 5))" :key="day">
@@ -211,20 +211,25 @@ export default {
   return `${formattedDate} (${dayOfWeek})`;
 },
 calculateDayOfWeekStats(posts) {
-  const stats = { '일': 0, '월': 0, '화': 0, '수': 0, '목': 0, '금': 0, '토': 0 };
+  const stats = { '월요일': 0, '화요일': 0, '수요일': 0, '목요일': 0, '금요일': 0, '토요일': 0, '일요일': 0 };
 
-    posts.forEach(post => {
-      const dayOfWeek = this.getDayOfWeek(post.date);
-      stats[dayOfWeek]++;
-    });
+  posts.forEach(post => {
+    const dayOfWeek = this.getDayOfWeek(post.date);
+    stats[dayOfWeek]++;
+  });
 
-    return stats;
-  },
+  return stats;
+},
+getDayOfWeek(date) {
+  if (!date) {
+    return 'N/A'; 
+  }
 
-  getDayOfWeek(date) {
   const dateString = date.toString();
-  const dayOfWeekOptions = { weekday: 'short' };
-  return new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', dayOfWeekOptions);
+  const dayOfWeekOptions = { weekday: 'long' };
+  const fullDayOfWeek = new Date(`${dateString.substr(0, 4)}-${dateString.substr(4, 2)}-${dateString.substr(6, 2)}`).toLocaleDateString('ko-KR', dayOfWeekOptions);
+
+  return fullDayOfWeek;
 },
 findMostActiveDays(stats) {
   let maxCount = 0;
@@ -263,32 +268,38 @@ calculateAveragePostingGap(posts) {
   return averageGap;
 },
 calculateDayOfWeekStatsReels(reels) {
-const stats = { '일': 0, '월': 0, '화': 0, '수': 0, '목': 0, '금': 0, '토': 0 };
+  const stats = { '월요일': 0, '화요일': 0, '수요일': 0, '목요일': 0, '금요일': 0, '토요일': 0, '일요일': 0 };
 
-reels.forEach(reel => {
-  const dayOfWeek = this.getDayOfWeek(reel.reels_date);
-  stats[dayOfWeek]++;
-});
+  reels.forEach(reel => {
+    const dayOfWeek = this.getDayOfWeek(reel.reels_date);
+    stats[dayOfWeek]++;
+  });
 
-return stats;
+  return stats;
 },
+
 findMostActiveDaysReels(stats) {
   let maxCount = 0;
-let mostActiveDays = [];
+  let mostActiveDays = [];
 
-for (const day in stats) {
-  const count = stats[day];
-
-  if (count > maxCount) {
-    maxCount = count;
-    mostActiveDays = [day];
-  } else if (count === maxCount) {
-    mostActiveDays.push(day);
+  if (Object.keys(stats).length === 0) {
+    return [];
   }
-}
 
-return mostActiveDays;
+  for (const day in stats) {
+    const count = stats[day];
+
+    if (count > maxCount) {
+      maxCount = count;
+      mostActiveDays = [day];
+    } else if (count === maxCount) {
+      mostActiveDays.push(day);
+    }
+  }
+
+  return mostActiveDays;
 },
+
 calculateAverageReelsGap(reels) {
   if (!reels || reels.length < 2) {
     return 0; 
@@ -353,10 +364,12 @@ calculateAverageReelsGap(reels) {
   .post-analysis {
     display: flex;
     padding: 15px;
+    gap: 100px;
   }
   .reels-analysis {
     display: flex;
     padding: 15px;
+    gap: 100px;
   }
   .post {
     width: 70%;
@@ -383,6 +396,7 @@ calculateAverageReelsGap(reels) {
     border: 1px solid #c2c2c2;
     border-radius: 10px;
     display: flex;
+    justify-content: center;
     padding: 40px;
     box-sizing: border-box;
     overflow: hidden;
