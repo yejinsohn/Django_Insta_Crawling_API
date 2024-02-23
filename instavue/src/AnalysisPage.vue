@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-        <div class="posting-gap">
+        <div class="posting-gap" style="padding-right: 70px;">
           <h5 style="padding-top: 30px;">평균 게시글 업로드 간격</h5>
           <div class="gap">
             {{ calculateAveragePostingGap(sortedPosts).toFixed(2) }}일
@@ -85,7 +85,7 @@
             </div>
           </div>
         </div>
-        <div class="posting-gap">
+        <div class="posting-gap" style="padding-right: 70px;">
           <h5 style="padding-top: 30px;">평균 릴스 업로드 간격</h5>
           <div class="gap">
             {{ calculateAverageReelsGap(sortedReels).toFixed(2) }}일
