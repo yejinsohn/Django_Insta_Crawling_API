@@ -112,7 +112,7 @@
         <h5 style="padding-bottom: 20px; font-size: medium;">가장 많이 사용한 해시태그</h5>  
         <div class="tag">
           <div v-for="(tags, index) in sortedTags" :key="index" style="min-width: 15%; box-sizing: border-box; padding: 5px;">
-            {{ Number(index) + 1 }}위. ({{ tags[1] }}개) <span style="color: rgb(63, 114, 155);">{{ tags[0] }}</span>
+            {{ Number(index) + 1 }}위. ({{ tags[1] + 1}}개) <span style="color: rgb(63, 114, 155);">{{ tags[0] }}</span>
           </div>
         </div>
       </div>
