@@ -78,7 +78,7 @@ def insta_crawling(username):
     postList.append(postDict)
 
     # 원하는 게시물 수만큼 반복
-    for i in range(6):
+    for i in range(9):
         driver.find_element(By.CSS_SELECTOR, 'div._aaqg._aaqh').click()
         driver.implicitly_wait(10)
         postDict = {
@@ -107,7 +107,7 @@ def insta_crawling(username):
 
     reels_data = driver.find_elements(By.CSS_SELECTOR, 'div._aajy')
     driver.implicitly_wait(10)
-    for i in range(5):
+    for i in range(10):
         reelsDict = {
             'reels_view': crawling_modules.get_reels_view(driver, reels_data[i]),
             'reels_like': crawling_modules.get_reels_like(driver, reels_data[i]),

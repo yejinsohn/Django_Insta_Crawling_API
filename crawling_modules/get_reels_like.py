@@ -11,7 +11,8 @@ def get_reels_like(driver, reels_data):
         reels_data.click()
 
         driver.implicitly_wait(10)
-        reels_like = driver.find_element(By.CSS_SELECTOR, 'section._ae5m > div > div > span > a > span > span').text
+        reels_like = driver.find_element(By.CSS_SELECTOR, 'section.x12nagc.x182iqb8.x1pi30zi.x1swvt13 > div > div > span > a > span > span').text
+        
 
         if '만' in reels_like:
             if '.' in reels_like:
