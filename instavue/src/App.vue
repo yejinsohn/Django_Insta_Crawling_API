@@ -29,7 +29,7 @@ import Content from './AnalysisPage.vue'
 import Footer from './components/Footer.vue';
 import axios from 'axios';
 
-let url = 'http://localhost:8000/'
+let url = 'http://43.201.234.182/+8000'
 
 export default {
   data: () => {
